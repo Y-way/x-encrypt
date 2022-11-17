@@ -7,7 +7,7 @@ using namespace encrypt;
 
 static void DefaultLogCallback(const char* message)
 {
-    printf(message);
+    printf("%s\n", message);
 }
 
 XLogCallback Logging::s_Callback = DefaultLogCallback;

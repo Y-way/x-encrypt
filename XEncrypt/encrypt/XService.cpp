@@ -2,12 +2,12 @@
 #include "common/Allocator.h"
 #include "common/Logging.h"
 #include "XEFDecoder.h"
+#include "common/Common.h"
 #include "XEFEncoder.h"
 
 namespace encrypt
 {
-    static XService* s_instance = nullptr;
-
+    static XService* s_instance = nullptr;   
     XService::~XService()
     {
         UnregisterEncoder();
@@ -21,7 +21,9 @@ namespace encrypt
             return false;
         }
         XEFHeader* xHeader = (XEFHeader*)data;
-        return xHeader->IsValid();
+        bool ret = IS_XFILE_SIGNATURE_CODE(xHeader->sign);
+        Logging::Write("IsEncrypted:%s", (ret ? "True" : "False"));
+        return ret;
     }
 
     void XService::Initialize()

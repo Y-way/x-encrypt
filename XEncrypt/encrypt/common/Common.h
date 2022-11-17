@@ -1,5 +1,5 @@
 #pragma once
-#include "config.h"
+
 namespace encrypt
 {
     enum XCodeMemoryType
@@ -51,10 +51,5 @@ namespace encrypt
         uint8_t version; // The encode version
         uint32_t length; // The rawdata length.
         uint32_t reserved; //Reserved for users. 
-
-        bool IsValid()
-        {
-            return IS_XFILE_SIGNATURE_CODE(sign);
-        }
     };
 }
