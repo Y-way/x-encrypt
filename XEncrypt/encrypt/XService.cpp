@@ -7,7 +7,8 @@
 
 namespace encrypt
 {
-    static XService* s_instance = nullptr;   
+    static XService* s_instance = nullptr;
+
     XService::~XService()
     {
         UnregisterEncoder();

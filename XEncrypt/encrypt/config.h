@@ -342,7 +342,7 @@ struct XEncryptStaticAssertHelper<true>
 };
 
 
-#define Assert(x) do { (void)(x); X_ENCRYPT_ASSERT(x); } while (false)
+#define XEncryptAssert(x) do { (void)(x); X_ENCRYPT_ASSERT(x); } while (false)
 #define XEncryptStaticAssert(...) do { XEncryptStaticAssertHelper<(__VA_ARGS__)>(); } while (false)
 #endif
 
@@ -393,7 +393,7 @@ static const uintptr_t kUIntPtrMax = UINT32_MAX;
 
 static const byte kXFileSignatureCode[] = { '@', 'X', 'F', 'E' };
 template<typename T = uint32_t>
-bool IS_XFILE_SIGNATURE_CODE(T code) { return code == *((uint32_t*)(&kXFileSignatureCode)); }
+bool IS_XFILE_SIGNATURE_CODE(T code) { return (code == *((uint32_t*)(&kXFileSignatureCode)));}
 
 #if X_ENCRYPT_COMPILER_MSVC
 #define X_ENCRYPT_ATTRIBUTE_WEAK

@@ -1,5 +1,5 @@
 #include "XContext.h"
-#include "Allocator.h"
+#include "common/Allocator.h"
 namespace encrypt
 {
     void XContext::Reset()

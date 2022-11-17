@@ -42,7 +42,7 @@ namespace encrypt
 
     //Add By Y-way
     //The header of encryption file.
-    struct XEFHeader
+    typedef struct
     {
         uint32_t sign;// Signature code.
         uint8_t offset;// Rawdata offset form the file begin.
@@ -51,5 +51,5 @@ namespace encrypt
         uint8_t version; // The encode version
         uint32_t length; // The rawdata length.
         uint32_t reserved; //Reserved for users. 
-    };
+    }XEFHeader;
 }

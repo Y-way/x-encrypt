@@ -1,7 +1,7 @@
 #pragma once
 
 #include "config.h"
-#include "Common.h"
+#include "common/Common.h"
 
 namespace encrypt
 {
@@ -39,7 +39,7 @@ namespace encrypt
             this->_length = length;
         }
         
-        //const byte* GetResultData() const {return _data;}
+        const byte* GetResultData() const {return _data;}
         
         byte* GetResultData() {return _data;}
 

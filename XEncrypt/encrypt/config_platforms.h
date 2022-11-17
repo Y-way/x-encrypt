@@ -240,7 +240,7 @@
 #define X_ENCRYPT_THREAD_HAS_CPU_SET X_ENCRYPT_TARGET_POSIX && !X_ENCRYPT_THREADS_PS4
 
 /* Trigger assert if 'ptr' is not aligned to 'alignment'. */
-#define ASSERT_ALIGNMENT(ptr, alignment) \
+#define X_ENCRYPT_ASSERT_ALIGNMENT(ptr, alignment) \
     X_ENCRYPT_ASSERT((((ptrdiff_t) ptr) & (alignment - 1)) == 0 && "Unaligned pointer!")
 
 #if defined(_MSC_VER)
