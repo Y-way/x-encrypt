@@ -59,7 +59,7 @@ namespace encrypt
                 return;
             }
             encodeData = xefData + xHeader.offset;
-            if (!ZipUtils::CompressMemory(input, inSize, encodeData, &dataSize))
+            if (!ZipUtils::GZipCompress(input, inSize, encodeData, &dataSize))
             {
                 XMEMORY_FREE(xefData);
                 context->SetResultCode(ResultCode::InvalidZip);

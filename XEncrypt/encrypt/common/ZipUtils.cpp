@@ -8,7 +8,7 @@ namespace encrypt
 {
 #define BUFFER_INC_FACTOR (2)
 
-    int ZipUtils::UncompressMemoryWithHint(const byte* in, size_t inLength, size_t outLengthHint, byte** out, size_t* outLength)
+    int ZipUtils::GZipUncompressWithHint(const byte* in, size_t inLength, size_t outLengthHint, byte** out, size_t* outLength)
     {
         X_ENCRYPT_ASSERT(in != NULL);
         X_ENCRYPT_ASSERT(inLength > 0);
@@ -80,10 +80,10 @@ namespace encrypt
         return err;
     }
 
-    bool ZipUtils::UncompressMemoryWithHint(const byte* in, size_t inLength, byte** out, size_t* outSize, size_t outLengthHint)
+    bool ZipUtils::GZipUncompressWithHint(const byte* in, size_t inLength, byte** out, size_t* outSize, size_t outLengthHint)
     {
         X_ENCRYPT_ASSERT(outSize != NULL);
-        int err = UncompressMemoryWithHint(in, inLength, outLengthHint, out, outSize);
+        int err = GZipUncompressWithHint(in, inLength, outLengthHint, out, outSize);
 
         if (err != Z_OK || *out == nullptr)
         {
@@ -115,10 +115,10 @@ namespace encrypt
         return true;
     }
 
-    bool ZipUtils::UncompressMemory(const byte* in, size_t inLength, byte** out, size_t* outSize)
+    bool ZipUtils::GZipUncompress(const byte* in, size_t inLength, byte** out, size_t* outSize)
     {
         // 256k for hint
-        return Z_OK == UncompressMemoryWithHint(in, inLength, 256 * 1024, out, outSize);
+        return Z_OK == GZipUncompressWithHint(in, inLength, 256 * 1024, out, outSize);
     }
 
     unsigned long ZipUtils::CompressMemoryBound(unsigned long inLength)
@@ -127,7 +127,6 @@ namespace encrypt
     }
 
     /* Compress gzip data */
-    /* input 原数据 inSize 原数据长度 out 压缩后数据 outSize 压缩后长度 */
     int GZipCompress(Bytef* input, uLong inSize, Bytef* out, uLong* outSize)
     {
         X_ENCRYPT_ASSERT(out != NULL);
@@ -155,22 +154,6 @@ namespace encrypt
             {
                 return err;
             }
-
-            //c_stream.next_out = out;
-            //c_stream.avail_out = 0;
-            //c_stream.next_in = (z_const Bytef*)input;
-            //c_stream.avail_in = 0;
-            //do {
-            //    if (c_stream.avail_out == 0) {
-            //        c_stream.avail_out = left > (uLong)max ? max : (uInt)left;
-            //        left -= c_stream.avail_out;
-            //    }
-            //    if (c_stream.avail_in == 0) {
-            //        c_stream.avail_in = inSize > (uLong)max ? max : (uInt)inSize;
-            //        inSize -= c_stream.avail_in;
-            //    }
-            //    err = deflate(&c_stream, inSize ? Z_NO_FLUSH : Z_FINISH);
-            //} while (err == Z_OK);
 
             c_stream.next_in = input;
             c_stream.avail_in = inSize;
@@ -213,7 +196,7 @@ namespace encrypt
         return -1;
     }
 
-    bool ZipUtils::CompressMemory(const byte* in, size_t inLength, byte* out, unsigned long* outLength)
+    bool ZipUtils::GZipCompress(const byte* in, size_t inLength, byte* out, unsigned long* outLength)
     {
         X_ENCRYPT_ASSERT(in != NULL);
         X_ENCRYPT_ASSERT(inLength > 0);

@@ -47,7 +47,7 @@ namespace encrypt
                     context->SetResultCode(ResultCode::InvalidUnzip);
                     return;
                 }
-                if (!ZipUtils::UncompressMemory(rawdata, xHeader->length, &unpackedData, &unpackedLen))
+                if (!ZipUtils::GZipUncompress(rawdata, xHeader->length, &unpackedData, &unpackedLen))
                 {
                     context->SetResultCode(ResultCode::InvalidUnzip);
                     return;
