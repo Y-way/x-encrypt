@@ -3,9 +3,8 @@
 #include <cstdlib>
 #include <stdint.h>
 
-
 #if defined(__ANDROID_API__) && (__ANDROID_API__ < 16)
-static void* native_aligned_alloc(size_t alignment, size_t size)
+static void* aligned_alloc(size_t alignment, size_t size)
 {
     // alignment must be >= sizeof(void*)
     if(alignment < sizeof(void*))
@@ -15,12 +14,14 @@ static void* native_aligned_alloc(size_t alignment, size_t size)
 
     return memalign(alignment, size);
 }
+
 #elif defined(__APPLE__) || defined(__ANDROID__) || (defined(__linux__) && defined(__GLIBCXX__) && !defined(_GLIBCXX_HAVE_ALIGNED_ALLOC))
+
 #if defined(__APPLE__)
 #include <AvailabilityMacros.h>
 #endif
 
-static void* native_aligned_alloc(size_t alignment, size_t size)
+static void* aligned_alloc(size_t alignment, size_t size)
 {
     // Unfortunately, aligned_alloc causes VMA to crash due to it returning null pointers. (At least under 11.4)
     // Therefore, for now disable this specific exception until a proper solution is found.
@@ -48,8 +49,10 @@ static void* native_aligned_alloc(size_t alignment, size_t size)
         return pointer;
     return NULL;
 }
+#endif
 
-#elif defined(_WIN32)
+#if defined(_WIN32) || defined(WINDOWS)
+
 static void* native_aligned_alloc(size_t alignment, size_t size)
 {
     return _aligned_malloc(size, alignment);
