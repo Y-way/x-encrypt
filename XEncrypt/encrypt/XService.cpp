@@ -1,4 +1,4 @@
-#include "XService.h"
+﻿#include "XService.h"
 #include "common/Allocator.h"
 #include "common/Logging.h"
 #include "XEFDecoder.h"

@@ -1,4 +1,4 @@
-#include "XEFEncoder.h"
+﻿#include "XEFEncoder.h"
 #include "XService.h"
 #include "common/Logging.h"
 #include "common/Allocator.h"
@@ -49,7 +49,7 @@ namespace encrypt
         byte* xefData = nullptr;
         byte* encodeData = nullptr;
         unsigned long dataSize = 0;
-        if (xHeader.encode_type == XEncodeType::XZip)
+        if (xHeader.encode_type == XEncodeType::XGZip)
         {
             dataSize = ZipUtils::CompressMemoryBound((unsigned long)inSize);
             xefData = (byte*)XMEMORY_MALLOC(xHeader.offset + dataSize);

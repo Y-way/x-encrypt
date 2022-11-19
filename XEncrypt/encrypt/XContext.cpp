@@ -1,4 +1,4 @@
-#include "XContext.h"
+﻿#include "XContext.h"
 #include "common/Allocator.h"
 namespace encrypt
 {

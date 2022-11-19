@@ -1,4 +1,4 @@
-#include "XEFDecoder.h"
+﻿#include "XEFDecoder.h"
 #include "XService.h"
 #include "common/Logging.h"
 #include "common/Allocator.h"
@@ -39,7 +39,7 @@ namespace encrypt
             byte* rawdata = DecryptData((byte*)(input + xHeader->offset), xHeader->encrypt_data_size);
             unpackedData = rawdata;
             unpackedLen = xHeader->length;
-            if (xHeader->encode_type == XEncodeType::XZip)
+            if (xHeader->encode_type == XEncodeType::XGZip)
             {
                 //Unzip the compressed data
                 if (!ZipUtils::IsGZipBuffer(rawdata, xHeader->length))
