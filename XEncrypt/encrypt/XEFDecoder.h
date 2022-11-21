@@ -19,7 +19,8 @@ namespace encrypt
         /// </summary>
         /// <param name="context">解密器上下文</param>
 		virtual void Decode(XContext* context) X_ENCRYPT_FINAL;
+
     private:
-        byte* DecryptData(byte* rawdata, int size);
+        bool DecryptData(XContext* context, byte* data, byte** out, size_t& unpackedLen);
 	};
 }

@@ -35,7 +35,7 @@ namespace encrypt
         /// <param name="in">加密数据</param>
         /// <param name="length">输入数据长度</param>
         /// <returns>返回解密状态码</returns>
-        static ResultCode Decrypt(XContext* context, const byte* in, int64_t length);
+        static ResultCode Decrypt(XContext* context, const byte* in, int64_t length, bool cloneInput = false);
         /// <summary>
         /// 使用加密上下文进行数据加密
         /// </summary>

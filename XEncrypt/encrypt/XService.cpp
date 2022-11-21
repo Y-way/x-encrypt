@@ -64,7 +64,7 @@ namespace encrypt
         }
     }
 
-    ResultCode XService::Decrypt(XContext* context, const byte* in, int64_t length)
+    ResultCode XService::Decrypt(XContext* context, const byte* input, int64_t length, bool cloneInput /*= false*/)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
         if (s_instance == nullptr)
@@ -77,7 +77,8 @@ namespace encrypt
         }
         else
         {
-            context->SetOriginalData(in, length);
+            context->SetCloneInputDataFlag(cloneInput);
+            context->SetInputData(input, length);
             s_instance->_decoder->Decode(context);
         }
         return context->GetResultCode();
@@ -96,7 +97,7 @@ namespace encrypt
         }
         else
         {
-            context->SetOriginalData(in, length);
+            context->SetInputData(in, length);
             s_instance->_encoder->Encode(context, encryptSize, type);
         }
         return context->GetResultCode();

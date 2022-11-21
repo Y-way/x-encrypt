@@ -5,10 +5,11 @@ namespace encrypt
     void XContext::Reset()
     {
         ReleaseData();
+        _clone = false;
         _code = ResultCode::Unknown;
         _memoryType = XCodeMemoryType::None;
-        _origin = nullptr;
-        _originalLength = 0;
+        _input = nullptr;
+        _inputLength = 0;
     }
 
     void XContext::ReleaseData()

@@ -16,8 +16,8 @@ namespace encrypt
             return;
         }
 #ifdef XEF_ENCRYPT_SERVICE
-        byte* input = const_cast<byte*>(context->GetOriginalData());
-        int64_t inSize = context->GetOriginalDataLength();
+        byte* input = const_cast<byte*>(context->GetInputData());
+        int64_t inSize = context->GetInputDataLength();
         if (input == nullptr)
         {
             context->SetResultCode(ResultCode::InvalidInputData);
@@ -100,13 +100,11 @@ namespace encrypt
     {
 #ifdef XEF_ENCRYPT_SERVICE
         X_ENCRYPT_ASSERT(rawdata != NULL);
-        byte* encryptData = rawdata;
         //encrypt the data.
         for (int i = 0; i < size; i++)
         {
-            byte c = *encryptData;
-            *encryptData = ((c << 0x04) | (c >> 0x04));
-            encryptData++;
+            byte* c = &rawdata[i];
+            *c = ((*c << 0x04) | (*c >> 0x04));
         }
 #endif // XEF_ENCRYPT_SERVICE
         return rawdata;

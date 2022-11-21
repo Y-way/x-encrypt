@@ -7,6 +7,77 @@
 
 namespace encrypt
 {
+    namespace
+    {
+        class CopyDataScope
+        {
+        public:
+            CopyDataScope(const byte* data, int64_t size):_holder(nullptr)
+            {
+                _holder = (byte*)XMEMORY_MALLOC(size);
+                memcpy(_holder, data, size);
+            }
+
+            byte* GetData() const { return _holder; }
+
+            ~CopyDataScope()
+            {
+                if (_holder != nullptr)
+                {
+                    XMEMORY_FREE(_holder);
+                }
+                _holder = nullptr;
+            }
+
+        private:
+            CopyDataScope(const CopyDataScope& other);
+            CopyDataScope& operator= (const CopyDataScope& other);
+
+        private:
+            byte* _holder;
+        };
+    }
+
+
+    bool XEFDecoder::DecryptData(XContext* context, byte* data, byte** out, size_t& unpackedLen)
+    {
+#ifdef XEF_DECRYPT_SERVICE
+        XEFHeader* xHeader = (XEFHeader*)data;
+
+        byte* rawdata = (byte*)(data + xHeader->offset);
+        
+        //decrypt the data.
+        for (int i = 0; i < xHeader->encrypt_data_size; i++)
+        {
+            byte* c = &rawdata[i];
+            *c = ((*c << 0x04) | (*c >> 0x04));
+        }
+
+        byte* unpackedData = rawdata;
+        unpackedLen = xHeader->length;
+        if (xHeader->encode_type == XEncodeType::XGZip)
+        {
+            //Unzip the compressed data
+            if (!ZipUtils::IsGZipBuffer(rawdata, xHeader->length))
+            {
+                context->SetResultCode(ResultCode::InvalidUnzip);
+                return false;
+            }
+            if (!ZipUtils::GZipUncompress(rawdata, xHeader->length, &unpackedData, &unpackedLen))
+            {
+                context->SetResultCode(ResultCode::InvalidUnzip);
+                return false;
+            }
+            context->SetMemoryType(XCodeMemoryType::AllocateMemory);
+        }
+        if (out != nullptr)
+        {
+            *out = unpackedData;
+        }
+#endif
+        return true;
+    }
+
     void XEFDecoder::Decode(XContext* context)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
@@ -15,9 +86,10 @@ namespace encrypt
             context->SetResultCode(ResultCode::ContextTypeError);
             return;
         }
+
 #ifdef XEF_DECRYPT_SERVICE
-        byte* input = const_cast<byte*>(context->GetOriginalData());
-        int64_t inSize = context->GetOriginalDataLength();
+        byte* input = const_cast<byte*>(context->GetInputData());
+        int64_t inSize = context->GetInputDataLength();
         if (input == nullptr)
         {
             context->SetResultCode(ResultCode::InvalidInputData);
@@ -33,26 +105,23 @@ namespace encrypt
         size_t unpackedLen = inSize;
         context->SetMemoryType(XCodeMemoryType::OriginalOffset);
 
-        if (XService::IsEncrypted(input, inSize))//XEncode file.
+        if (XService::IsEncrypted(input, inSize))//Decrypt data.
         {
-            XEFHeader* xHeader = (XEFHeader*)input;
-            byte* rawdata = DecryptData((byte*)(input + xHeader->offset), xHeader->encrypt_data_size);
-            unpackedData = rawdata;
-            unpackedLen = xHeader->length;
-            if (xHeader->encode_type == XEncodeType::XGZip)
+            if (context->IsCloneInputData())
             {
-                //Unzip the compressed data
-                if (!ZipUtils::IsGZipBuffer(rawdata, xHeader->length))
+                //copy the original data.
+                CopyDataScope scope(context->GetInputData(), inSize);
+                if (!DecryptData(context, scope.GetData(), &unpackedData, unpackedLen))
                 {
-                    context->SetResultCode(ResultCode::InvalidUnzip);
                     return;
                 }
-                if (!ZipUtils::GZipUncompress(rawdata, xHeader->length, &unpackedData, &unpackedLen))
+            }
+            else
+            {
+                if (!DecryptData(context, input, &unpackedData, unpackedLen))
                 {
-                    context->SetResultCode(ResultCode::InvalidUnzip);
                     return;
                 }
-                context->SetMemoryType(XCodeMemoryType::AllocateMemory);
             }
         }
         context->SetResultData(unpackedData, unpackedLen);
@@ -60,21 +129,5 @@ namespace encrypt
 #else
         context->SetResultCode(ResultCode::NotSupportDecrypt);
 #endif // !XEF_DECRYPT_SERVICE
-    }
-
-    byte* XEFDecoder::DecryptData(byte* rawdata, int size)
-    {
-#ifdef XEF_DECRYPT_SERVICE
-        X_ENCRYPT_ASSERT(rawdata != NULL);
-        byte* encryptData = rawdata;
-        //decrypt the data.
-        for (int i = 0; i < size; i++)
-        {
-            byte c = *encryptData;
-            *encryptData = ((c << 0x04) | (c >> 0x04));
-            encryptData++;
-        }
-#endif // XEF_DECRYPT_SERVICE
-        return rawdata;
     }
 }

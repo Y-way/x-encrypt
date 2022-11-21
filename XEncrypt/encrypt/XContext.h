@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "config.h"
 #include "common/Common.h"
@@ -9,10 +9,14 @@ namespace encrypt
     class XENCRYPT_API XContext
     {
     public:
-        XContext(XContextType type):_type(type) { Reset(); };
+        XContext(XContextType type):_type(type),_clone(false) { Reset(); };
         ~XContext() { Reset(); };
         
         XContextType GetType() const { return _type; }
+
+        void SetCloneInputDataFlag(bool keep) { _clone = keep; }
+        
+        bool IsCloneInputData() const { return _clone; }
 
         void SetMemoryType(XCodeMemoryType type) { _memoryType = type;}
         XCodeMemoryType GetMemoryType() const { return _memoryType;}
@@ -24,14 +28,14 @@ namespace encrypt
 
         void ReleaseData();
 
-        void SetOriginalData(const byte* data, int64_t length)
+        void SetInputData(const byte* data, int64_t length)
         {
-            _origin = data;
-            _originalLength = length;
+            _input = data;
+            _inputLength = length;
         }
 
-        const byte* GetOriginalData() const { return _origin;}
-        int64_t GetOriginalDataLength() const {return _originalLength;}
+        const byte* GetInputData() const { return _input;}
+        int64_t GetInputDataLength() const {return _inputLength;}
 
         void SetResultData(byte* data, int64_t length)
         {
@@ -50,8 +54,9 @@ namespace encrypt
         XCodeMemoryType _memoryType;
         byte* _data;
         int64_t _length;
-        const byte* _origin;
-        int64_t _originalLength;
+        const byte* _input;
+        int64_t _inputLength;
+        bool _clone;
     };
 
 }
