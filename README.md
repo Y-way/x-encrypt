@@ -1,2 +1,3 @@
 # xencrypt
-A  simple enrypt/decrypt data library for  custom file format.
+一个简单的自定义加密/解密库.
+自持自定义的加密/解密器
