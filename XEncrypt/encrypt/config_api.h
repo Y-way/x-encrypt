@@ -4,13 +4,6 @@
 #include "config_api_platforms.h"
 #include "api_types.h"
 
-// If the platform loads il2cpp as a dynamic library but does not have dlsym (or equivalent) then
-// define X_ENCRYPT_API_DYNAMIC_NO_DLSYM = 1 to add support for api function registration and symbol
-// lookup APIs, see il2cpp-api.cpp
-#ifndef X_ENCRYPT_API_DYNAMIC_NO_DLSYM
-#define X_ENCRYPT_API_DYNAMIC_NO_DLSYM 0
-#endif
-
 #if X_ENCRYPT_TARGET_ARMV7
 // On ARMv7 with Thumb instructions the lowest bit is always set.
 // With Thumb2 the second-to-lowest bit is also set. Mask both of

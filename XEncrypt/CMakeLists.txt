@@ -13,6 +13,9 @@ cmake_minimum_required (VERSION 3.8)
 option(SUPPORT_ENCRYPT "Support encrypt data sevice" ON)
 option(SUPPORT_DECRYPT "Support decrypt data sevice" ON)
 
+option(LIB_SUPPORT_ENCRYPT "lib supports encrypt data sevice" ON)
+option(LIB_SUPPORT_DECRYPT "lib supports decrypt data sevice" ON)
+
 message(STATUS "PROJECT_SOURCE_DIR:${PROJECT_SOURCE_DIR}")
 message(STATUS "PROJECT_BINARY_DIR:${PROJECT_BINARY_DIR}")
 message(STATUS "PROJECT_NAME:${PROJECT_NAME}")
@@ -27,7 +30,8 @@ message(STATUS "SUPPORT_DECRYPT:${SUPPORT_DECRYPT}")
 # set(OPENCV_DLL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/OpenCV/bin)
 # 设置输出目录
 #set(OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
-set(OUTPUT_PATH "${PROJECT_SOURCE_DIR}/../../Assets/Plugins/x86_64")
+set(OUTPUT_PATH "${PROJECT_SOURCE_DIR}/../../Assets/Editor/HybridCLR/External/xEncrypt/lib/x86_64")
+
 # 设置可执行文件的输出路径：
 # set(EXECUTABLE_OUTPUT_PATH "${OUTPUT_PATH}/bin/")
 # 库lib输出路径：
@@ -73,6 +77,13 @@ message(STATUS "LIBRARY_OUTPUT_PATH:${EXECUTABLE_OUTPUT_PATH}")
 if(MSVC)
     #上面两条语句分别设置了Debug版本和Release版本下库文件的后缀名
     #set(CMAKE_DEBUG_POSTFIX "_d")    set(CMAKE_RELEASE_POSTFIX "_r") 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+
+    if (CMAKE_BUILD_TYPE MATCHES Debug)
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    else()
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MT")
+    endif()
     set(CMAKE_DEBUG_POSTFIX "d")
     # 定义宏
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
@@ -185,13 +196,17 @@ add_library(libXEncrypt STATIC
 set_target_properties(XEncrypt PROPERTIES DEFINE_SYMBOL XENCRYPT_EXPORT_API)
 
 if(SUPPORT_ENCRYPT)
-target_compile_definitions(XEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
-target_compile_definitions(libXEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
+    target_compile_definitions(XEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
+    if(LIB_SUPPORT_ENCRYPT)
+        target_compile_definitions(libXEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
+    endif()
 endif()
 
 if(SUPPORT_DECRYPT)
-target_compile_definitions(XEncrypt PUBLIC XEF_DECRYPT_SERVICE)
-target_compile_definitions(libXEncrypt PUBLIC XEF_DECRYPT_SERVICE)
+    target_compile_definitions(XEncrypt PUBLIC XEF_DECRYPT_SERVICE)
+    if(LIB_SUPPORT_DECRYPT)
+        target_compile_definitions(libXEncrypt PUBLIC XEF_DECRYPT_SERVICE)
+    endif()
 endif()
 
 set_target_properties(XEncrypt PROPERTIES SOVERSION 1)
@@ -221,7 +236,7 @@ set_target_properties(XEncrypt PROPERTIES SOVERSION 1)
 
 #install (TARGETS XEncrypt DESTINATION bin)
 #install (FILES ${XENCRYPT_PUBLIC_HDRS} DESTINATION include)
-
+# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 # 将源代码添加到此项目的可执行文件。
 # 可执行文件名，通过指定的源文件列表构建出可执行目标文件：
 add_executable (CXEncrypt "CXEncrypt.cpp" "CXEncrypt.h")
