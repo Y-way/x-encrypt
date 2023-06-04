@@ -188,7 +188,7 @@ cmake --build build --config Debug
     2)实现'Encoder'编码接口类,用于支持数据加密
     3)实现'Decoder'解码接口类,用于支持数据解密.
 
-## 参考 'encrypte/plugin/xef'
+## 参考 'encrypt/plugin/xef/'目录下 XEF格式文件(数据)加密,解密.
     'XEFEncoder'类实现'Encoder'接口类,用于XEF格式数据加密.
     'XEFDecoder'类实现'Decoder'接口类,用于XEF格式数据解密.
     'XEFEncryptPlugin'类实现'XEncryptPlugin'插件接口类,用于注册到XService.
