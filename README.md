@@ -1,11 +1,11 @@
-# xencrypt
+# xEncrypt
 一个简单的自定义加密/解密库.
 支持自定义的加密/解密器
 
 
-## 使用CMake编译xencrypt的测试程序和示例程序
+## 使用CMake编译xEncrypt的测试程序和示例程序
 ```sh
-git clone --recursive https://github.com/Y-way/xencrypt
+git clone --recursive https://github.com/Y-way/xEncrypt
 cd xencrypt
 
 # 如果是macOS Xcode, 这里命令应该换成：cmake -B build -GXcode
