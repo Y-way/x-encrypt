@@ -9,8 +9,8 @@ namespace encrypt
     class XENCRYPT_API XContext
     {
     public:
-        XContext(XContextType type):_type(type),_clone(false) { Reset(); };
-        ~XContext() { Reset(); };
+        XContext(XContextType type);
+        ~XContext();
         
         XContextType GetType() const { return _type; }
 

@@ -10,7 +10,7 @@ namespace encrypt
     void XEFEncoder::Encode(XContext* context, uint8_t encryptSize, XEncodeType type)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
-        if (context->GetType() != XContextType::Ecrypt)
+        if (context->GetType() != XContextType::Encrypt)
         {
             context->SetResultCode(ResultCode::ContextTypeError);
             return;
@@ -51,20 +51,50 @@ namespace encrypt
         unsigned long dataSize = 0;
         if (xHeader.encode_type == XEncodeType::XGZip)
         {
-            dataSize = ZipUtils::CompressMemoryBound((unsigned long)inSize);
+            dataSize = (unsigned long)inSize;
+            //data too small.
+            if (dataSize < 32)
+            {
+                dataSize = 32;
+            }
+            dataSize = ZipUtils::CompressMemoryBound(dataSize);
             xefData = (byte*)XMEMORY_MALLOC(xHeader.offset + dataSize);
             if (xefData == nullptr)
             {
                 context->SetResultCode(ResultCode::OutMemory);
                 return;
             }
+
+            bool tryAgain = false;
             encodeData = xefData + xHeader.offset;
             if (!ZipUtils::GZipCompress(input, inSize, encodeData, &dataSize))
             {
                 XMEMORY_FREE(xefData);
                 context->SetResultCode(ResultCode::InvalidZip);
-                return;
+
+                tryAgain = true;
             }
+
+            if (tryAgain)
+            {
+                std::string outData;
+                int retCode = ZipUtils::GZipCompress(input, inSize, outData);
+                if (retCode != 0)
+                {
+                    context->SetResultCode(ResultCode::InvalidZip);
+                    return;
+                }
+                dataSize = (unsigned long)outData.length();
+                xefData = (byte*)XMEMORY_MALLOC(xHeader.offset + dataSize);
+                if (xefData == nullptr)
+                {
+                    context->SetResultCode(ResultCode::OutMemory);
+                    return;
+                }
+                encodeData = xefData + xHeader.offset;
+                memcpy(encodeData, outData.data(), dataSize);
+            }
+
             context->SetMemoryType(XCodeMemoryType::AllocateMemory);
         }
         else

@@ -29,7 +29,7 @@ namespace encrypt
         /// <summary>
         /// 加密上下文
         /// </summary>
-        Ecrypt,
+        Encrypt,
         /// <summary>
         /// 解密上下文
         /// </summary>

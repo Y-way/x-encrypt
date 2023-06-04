@@ -2,6 +2,17 @@
 #include "common/Allocator.h"
 namespace encrypt
 {
+    XContext::XContext(XContextType type)
+        :_type(type), _clone(false), _data(nullptr), _input(nullptr)
+    {
+        Reset();
+    }
+
+    XContext::~XContext()
+    {
+        { Reset(); }
+    }
+
     void XContext::Reset()
     {
         ReleaseData();

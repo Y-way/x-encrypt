@@ -34,6 +34,7 @@ namespace encrypt
         /// <param name="context">解密类型上下文</param>
         /// <param name="in">加密数据</param>
         /// <param name="length">输入数据长度</param>
+        /// <param name="cloneInput">输入数据是否要内存复制</param>
         /// <returns>返回解密状态码</returns>
         static ResultCode Decrypt(XContext* context, const byte* in, int64_t length, bool cloneInput = false);
         /// <summary>

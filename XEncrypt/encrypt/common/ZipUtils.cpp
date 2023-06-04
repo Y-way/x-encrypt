@@ -1,9 +1,12 @@
-
+﻿
 #include "ZipUtils.h"
 
 #include "zlib/zlib.h"
 #include "Logging.h"
 #include "Allocator.h"
+#include <string.h>
+#include <memory>
+
 namespace encrypt
 {
 #define BUFFER_INC_FACTOR (2)
@@ -126,76 +129,6 @@ namespace encrypt
         return compressBound(inLength);
     }
 
-    /* Compress gzip data */
-    int GZipCompress(Bytef* input, uLong inSize, Bytef* out, uLong* outSize)
-    {
-        X_ENCRYPT_ASSERT(out != NULL);
-        X_ENCRYPT_ASSERT(outSize != NULL);
-
-        int err = 0;
-        const uInt max = (uInt)-1;
-        uLong left;
-        left = *outSize;
-        *outSize = 0;
-
-        z_stream c_stream;
-        
-        if (input && inSize > 0)
-        {
-            c_stream.zalloc = NULL;
-            c_stream.zfree = NULL;
-            c_stream.opaque = NULL;
-
-            // hard to believe they don't have a macro for gzip encoding,"Add 16" is the best thing zlib can do:
-            //"Add 16 to windowBits to write a simple gzip header and trailer around the compressed data instead of a zlib wrapper"
-
-            err = deflateInit2(&c_stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED, MAX_WBITS + 16, 8, Z_DEFAULT_STRATEGY);
-            if (err != Z_OK)
-            {
-                return err;
-            }
-
-            c_stream.next_in = input;
-            c_stream.avail_in = inSize;
-            c_stream.next_out = out;
-            c_stream.avail_out = *outSize;
-            while (c_stream.avail_in != 0 && c_stream.total_out < *outSize)
-            {
-                err = deflate(&c_stream, Z_NO_FLUSH);
-                if (err != Z_OK)
-                {
-                    return err;
-                }
-            }
-
-            if (c_stream.avail_in != 0)
-            {
-                return c_stream.avail_in;
-            }
-
-            for (;;) {
-                err = deflate(&c_stream, Z_FINISH);
-                if (err == Z_STREAM_END)
-                    break;
-                if (err != Z_OK)
-                    return err;
-            }
-            err = deflateEnd(&c_stream);
-            if (err != Z_OK)
-            {
-                return err;
-            }
-
-            if (outSize != nullptr)
-            {
-                *outSize = c_stream.total_out;
-            }
-
-            return err;
-        }
-        return -1;
-    }
-
     bool ZipUtils::GZipCompress(const byte* in, size_t inLength, byte* out, unsigned long* outLength)
     {
         X_ENCRYPT_ASSERT(in != NULL);
@@ -257,5 +190,135 @@ namespace encrypt
             return false;
         }
         return true;
+    }
+
+
+#ifndef GZIP_CHUNK_SIZE
+#define GZIP_CHUNK_SIZE 16384
+#endif // !GZIP_CHUNK_SIZE
+
+    int ZipUtils::GZipCompress(const byte* in_str, size_t in_len, std::string& out_str, int level)
+    {
+        if (!in_str)
+            return Z_DATA_ERROR;
+
+        int ret, flush;
+        unsigned have;
+        z_stream strm;
+
+        unsigned char out[GZIP_CHUNK_SIZE] = { 0 };
+
+        /* allocate deflate state */
+        strm.zalloc = Z_NULL;
+        strm.zfree = Z_NULL;
+        strm.opaque = Z_NULL;
+
+        //ret = deflateInit(&strm, level);
+        ret = deflateInit2(&strm, Z_DEFAULT_COMPRESSION, Z_DEFLATED, MAX_WBITS + 16, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+        if (ret != Z_OK)
+            return ret;
+
+        std::shared_ptr<z_stream> sp_strm(&strm, [](z_stream* strm) { (void)deflateEnd(strm); });
+
+        const byte* end = in_str + in_len;
+
+        size_t pos_index = 0;
+        size_t distance = 0;
+        /* compress until end of file */
+        do {
+            distance = end - in_str;
+            strm.avail_in = (distance >= GZIP_CHUNK_SIZE) ? GZIP_CHUNK_SIZE : distance;
+            strm.next_in = (Bytef*)in_str;
+
+            // next pos
+            in_str += strm.avail_in;
+            flush = (in_str == end) ? Z_FINISH : Z_NO_FLUSH;
+
+            /* run deflate() on input until output buffer not full, finish
+              compression if all of source has been read in */
+            do {
+                strm.avail_out = GZIP_CHUNK_SIZE;
+                strm.next_out = out;
+                ret = deflate(&strm, flush);  /* no bad return value */
+                if (ret == Z_STREAM_ERROR)
+                    break;
+                have = GZIP_CHUNK_SIZE - strm.avail_out;
+                out_str.append((const char*)out, have);
+            } while (strm.avail_out == 0);
+
+            if (strm.avail_in != 0);   /* all input will be used */
+            break;
+
+            /* done when last data in file processed */
+        } while (flush != Z_FINISH);
+
+        if (ret != Z_STREAM_END) /* stream will be complete */
+            return Z_STREAM_ERROR;
+        /* clean up and return */
+        return Z_OK;
+    }
+
+    int ZipUtils::GZipDecompress(const byte* in_str, size_t in_len, std::string& out_str)
+    {
+        if (!in_str)
+            return Z_DATA_ERROR;
+
+        int ret;
+        unsigned have;
+        z_stream strm;
+        unsigned char out[GZIP_CHUNK_SIZE] = { 0 };
+
+        /* allocate inflate state */
+        strm.zalloc = Z_NULL;
+        strm.zfree = Z_NULL;
+        strm.opaque = Z_NULL;
+        strm.avail_in = 0;
+        strm.next_in = Z_NULL;
+        ret = inflateInit(&strm);
+        if (ret != Z_OK)
+            return ret;
+
+        std::shared_ptr<z_stream> sp_strm(&strm, [](z_stream* strm) { (void)inflateEnd(strm); });
+
+        const byte* end = in_str + in_len;
+
+        size_t pos_index = 0;
+        size_t distance = 0;
+
+        int flush = 0;
+        /* decompress until deflate stream ends or end of file */
+        do {
+            distance = end - in_str;
+            strm.avail_in = (distance >= GZIP_CHUNK_SIZE) ? GZIP_CHUNK_SIZE : distance;
+            strm.next_in = (Bytef*)in_str;
+
+            // next pos
+            in_str += strm.avail_in;
+            flush = (in_str == end) ? Z_FINISH : Z_NO_FLUSH;
+
+            /* run inflate() on input until output buffer not full */
+            do {
+                strm.avail_out = GZIP_CHUNK_SIZE;
+                strm.next_out = out;
+                ret = inflate(&strm, Z_NO_FLUSH);
+                if (ret == Z_STREAM_ERROR) /* state not clobbered */
+                    break;
+                switch (ret) 
+                {
+                    case Z_NEED_DICT:
+                        ret = Z_DATA_ERROR;   /* and fall through */
+                    case Z_DATA_ERROR:
+                    case Z_MEM_ERROR:
+                        return ret;
+                }
+                have = GZIP_CHUNK_SIZE - strm.avail_out;
+                out_str.append((const char*)out, have);
+            } while (strm.avail_out == 0);
+
+            /* done when inflate() says it's done */
+        } while (flush != Z_FINISH);
+
+        /* clean up and return */
+        return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
     }
 }
