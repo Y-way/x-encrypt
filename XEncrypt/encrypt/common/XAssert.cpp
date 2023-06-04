@@ -1,4 +1,4 @@
-#include "XAssert.h"
+﻿#include "XAssert.h"
 
 #if X_ENCRYPT_DEBUG
 #include <cstdio>

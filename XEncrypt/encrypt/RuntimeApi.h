@@ -56,6 +56,3 @@ extern "C"
 #if defined(__cplusplus)
 }
 #endif // __cplusplus
-
-
-

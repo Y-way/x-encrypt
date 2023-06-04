@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "config_platforms.h"
 #if !defined(X_ENCRYPT_EXPORT)

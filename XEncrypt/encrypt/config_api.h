@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "config_platforms.h"
 #include "config_api_platforms.h"
