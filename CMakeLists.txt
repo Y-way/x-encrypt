@@ -42,9 +42,7 @@ cmake_minimum_required (VERSION 3.8)
 
 #一旦设置上面的属性,在任何环境下生成的库文件都将直接放在你所设置的目录.
 
-set_property (GLOBAL PROPERTY USE_FOLDERS ON)
-
 project ("CXEncrypt")
-
+set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 add_subdirectory("XEncrypt")
 

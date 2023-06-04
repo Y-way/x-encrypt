@@ -40,7 +40,7 @@
 #endif
 #endif
 
-#define X_ENCRYPT_BINARY_SECTION_NAME "xfe"
+#define X_ENCRYPT_BINARY_SECTION_NAME "x-encrypt"
 #if defined(_MSC_VER)
     #define X_ENCRYPT_TARGET_WINDOWS 1
 

@@ -5,7 +5,9 @@
 #include "service/XService.h"
 
 #include "XEFDecoder.h"
-#include "XEFConsts.h"
+#include "XEFHeader.h"
+#include "XEncodeType.h"
+#include "XEFEncryptPlugin.h"
 
 namespace xencrypt
 {
@@ -107,7 +109,7 @@ namespace xencrypt
         size_t unpackedLen = inSize;
         context->SetMemoryType(XCodeMemoryType::OriginalOffset);
 
-        if (XService::IsEncrypted(input, inSize))//Decrypt data.
+        if (XEFEncryptPlugin::IsEncrypted(input, inSize))//Decrypt data.
         {
             if (context->IsCloneInputData())
             {

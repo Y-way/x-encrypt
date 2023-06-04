@@ -3,40 +3,32 @@
 #include "XService.h"
 #include "Common.h"
 
-#include "plugin/xef/XEFConsts.h"
-#include "plugin/xef/XEFEncoder.h"
-#include "plugin/xef/XEFDecoder.h"
-
 namespace xencrypt
 {
     static XService* s_instance = nullptr;
 
     XService::~XService()
     {
-        UnregisterEncoder();
-        UnregisterDecoder();
-    }
-    
-    bool XService::IsEncrypted(const byte* data, int64_t size)
-    {
-        if (data == nullptr || size < sizeof(XEFHeader))
-        {
-            return false;
-        }
-        XEFHeader* xHeader = (XEFHeader*)data;
-        bool ret = IS_XFILE_SIGNATURE_CODE(xHeader->sign);
-        Logging::Write("IsEncrypted:%s", (ret ? "True" : "False"));
-        return ret;
     }
 
-    void XService::Initialize()
+    void XService::Initialize(XEncryptPlugin* plugin)
     {
         if (s_instance == nullptr)
         {
-            s_instance = new XService();
-            s_instance->RegisterEncoder<XEFEncoder>();
-            s_instance->RegisterDecoder<XEFDecoder>();
+            s_instance = new XService(plugin);
         }
+    }
+
+    XEncryptPlugin* XService::RegisterPlugin(XEncryptPlugin* plugin)
+    {
+        if (s_instance == nullptr)
+        {
+            Logging::Write("The service instance dose not create.");
+            return nullptr;
+        }
+        XEncryptPlugin* oldPlugin = s_instance->_plugin;
+        s_instance->_plugin = plugin;
+        return oldPlugin;
     }
 
     void XService::UnInitialize()
@@ -48,32 +40,21 @@ namespace xencrypt
         }
     }
 
-    void XService::UnregisterDecoder()
-    {
-        if(_decoder != nullptr)
-        {
-            delete _decoder;
-            _decoder = nullptr;
-        }
-    }
-
-    void XService::UnregisterEncoder()
-    {
-        if(_encoder != nullptr)
-        {
-            delete _encoder;
-            _encoder = nullptr;
-        }
-    }
-
     ResultCode XService::Decrypt(XContext* context, const byte* input, int64_t length, bool cloneInput /*= false*/)
     {
-        X_ENCRYPT_ASSERT(context != nullptr);
         if (s_instance == nullptr)
         {
             return ResultCode::UnInitialize;
         }
-        if (s_instance->_decoder == nullptr)
+        if (context == nullptr)
+        {
+            return ResultCode::InvalidXContext;
+        }
+        if (s_instance->_plugin == nullptr)
+        {
+            return ResultCode::InvalidPlugin;
+        }
+        if (!s_instance->_plugin->IsSupport(context->GetType()))
         {
             context->SetResultCode(ResultCode::InvalidDecoder);
         }
@@ -81,26 +62,33 @@ namespace xencrypt
         {
             context->SetCloneInputDataFlag(cloneInput);
             context->SetInputData(input, length);
-            s_instance->_decoder->Decode(context);
+            s_instance->_plugin->Dencrypt(context);
         }
         return context->GetResultCode();
     }
 
-    ResultCode XService::Encrypt(XContext* context, const byte* in, int64_t length, uint8_t encryptSize, XEncodeType type)
+    ResultCode XService::Encrypt(XContext* context, const byte* in, int64_t length)
     {
-        X_ENCRYPT_ASSERT(context != nullptr);
         if (s_instance == nullptr)
         {
             return ResultCode::UnInitialize;
         }
-        if (s_instance->_encoder == nullptr)
+        if (context == nullptr)
+        {
+            return ResultCode::InvalidXContext;
+        }
+        if (s_instance->_plugin == nullptr)
+        {
+            return ResultCode::InvalidPlugin;
+        }
+        if (!s_instance->_plugin->IsSupport(context->GetType()))
         {
             context->SetResultCode(ResultCode::InvalidEncoder);
         }
         else
         {
             context->SetInputData(in, length);
-            s_instance->_encoder->Encode(context, encryptSize, type);
+            s_instance->_plugin->Encrypt(context);
         }
         return context->GetResultCode();
     }

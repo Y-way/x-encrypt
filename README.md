@@ -24,14 +24,18 @@ cmake --build build --config Debug
 === "C++"
 
     ```cpp
-        #include "CXEncrypt.h"
-        #include "encrypt/XService.h"
-        #include "encrypt/XContext.h"
-        #include "encrypt/common/Common.h"
+        #include "encrypt/service/XService.h"
+        #include "encrypt/service/XContext.h"
+        #include "encrypt/service/Common.h"
         #include "encrypt/RuntimeApi.h"
         #include "encrypt/common/Allocator.h"
 
         #include "encrypt/RuntimeApi.h"
+
+        #include "encrypt/plugin/xef/XEFHeader.h"
+        #include "encrypt/plugin/xef/XEncodeType.h"
+        #include "encrypt/plugin/xef/XEFEncryptPlugin.h"
+        #include "encrypt/plugin/xef/XEFRuntimeApi.h"
 
         using namespace std;
         using namespace xencrypt;
@@ -43,20 +47,22 @@ cmake --build build --config Debug
         {
             {
                 //C++
+                XEFEncryptPlugin* plugin = new XEFEncryptPlugin(XEncodeType::XGZip, 32);
                 
-                //start service
-                XService::Initialize();
-
 
                 //Encrypting data
-                // if(XService::IsEncrypted(data, length))
-                // {
-                //     cout>>"data has been encrypted."<<endl;
-                // }
+                
+                //if(XEFEncryptPlugin::IsEncrypted(rawData, length))
+                //{
+                //    cout>>"data has been encrypted."<<endl;
+                //}
+                
+                //start service
+                XService::Initialize(plugin);
 
-                XContext* pContext = XService::CreateContext(XContextType::Encrypt);
+                XContext* pContext = XService::CreateContext(XContextType::XEncrypt);
 
-                ResultCode result = XService::Encrypt(pContext, rawData, length, 32, XEncodeType::XGZip);
+                ResultCode result = XService::Encrypt(pContext, rawData, length);
 
                 const byte* encryptedData = nullptr;
                 int64_t encryptedDataLength = pContext->GetResultDataLength();
@@ -77,13 +83,12 @@ cmake --build build --config Debug
 
                 //Decrypting data
 
-                // if(!XService::IsEncrypted(data, length))
+                // if(!XEFEncryptPlugin::IsEncrypted(encryptedData, length))
                 // {
                 //     cout>>"data dose not have been encrypted."<<endl;
                 // }
 
-
-                pContext = XService::CreateContext(XContextType::Decrypt);
+                pContext = XService::CreateContext(XContextType::XDecrypt);
                 result = XService::Decrypt(pContext, encryptedData, encryptedDataLength, true);
 
                 const byte* decryptedData = pContext->GetResultData();
@@ -103,27 +108,30 @@ cmake --build build --config Debug
 
                 //stop service
                 XService::UnInitialize();
+
+                delete plugin;
+                plugin = nullptr;
             }
 
             {
                 //C API
-
+                void* plugin = xefencrypt_plugin_create(XEncodeType::XGZip, 32);
                 //start service
-                xencrypt_service_initialize();
+                xencrypt_service_initialize(plugin);
 
                 //Encrypting data
                 // 
-                // if(xencrypt_service_is_encrypted(data, length))
+                // if(xefencrypt_is_encrypted(data, length))
                 // {
                 //     printf("data has been encrypted.");
                 // }
 
-                void* pContext = xencrypt_create_xcontext(XContextType::Encrypt);
+                void* pContext = xencrypt_create_xcontext(XContextType::XEncrypt);
 
                 void* pEncryptBuff = nullptr;
                 int64_t encryptedDataLength = 0;
 
-                int result = xencrypt_service_encrypt(pContext, rawData, length, &pEncryptBuff, &encryptedDataLength, 32, 1);
+                int result = xencrypt_service_encrypt(pContext, rawData, length, &pEncryptBuff, &encryptedDataLength);
 
                 const byte* encryptedData = nullptr;
                 if (result != ResultCode::Ok)
@@ -142,13 +150,13 @@ cmake --build build --config Debug
 
                 //Decrypting data
 
-                // if(!xencrypt_service_is_encrypted(data, length))
+                // if(!xefencrypt_is_encrypted(data, length))
                 // {
                 //     printf("data dose not have been encrypted.");
                 // }
 
 
-                pContext = xencrypt_create_xcontext(XContextType::Decrypt);
+                pContext = xencrypt_create_xcontext(XContextType::XDecrypt);
 
                 void* decryptedData = nullptr;
                 int64_t decryptedDataLength = 0;
@@ -168,7 +176,19 @@ cmake --build build --config Debug
                 XMEMORY_SAFE_FREE(encryptedData);
                 //stop service
                 xencrypt_service_deinitialize();
+
+                xefencrypt_plugin_destroy(plugin);
             }
             getchar();
         }
     ```
+
+## 扩展自定义加密/解密器.
+    1)实现'XEncryptPlugin'插件接口类
+    2)实现'Encoder'编码接口类,用于支持数据加密
+    3)实现'Decoder'解码接口类,用于支持数据解密.
+
+## 参考 'encrypte/plugin/xef'
+    'XEFEncoder'类实现'Encoder'接口类,用于XEF格式数据加密.
+    'XEFDecoder'类实现'Decoder'接口类,用于XEF格式数据解密.
+    'XEFEncryptPlugin'类实现'XEncryptPlugin'插件接口类,用于注册到XService.

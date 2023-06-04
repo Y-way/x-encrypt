@@ -136,10 +136,11 @@ set(XENCRYPT_PRIVATE_HDRS
     encrypt/common/Logging.h
     encrypt/common/ZipUtils.h 
     encrypt/service/Common.h 
-    encrypt/service/Decoder.h
-    encrypt/service/Encoder.h
     encrypt/service/XContext.h
-    encrypt/service/XService.h)
+    encrypt/service/XService.h
+    encrypt/plugin/Decoder.h
+    encrypt/plugin/Encoder.h
+    encrypt/plugin/XEncryptPlugin.h)
 
 set(XENCRYPT_PRIVATE_SRCS
     encrypt/common/Allocator.cpp
@@ -156,14 +157,19 @@ set(XENCRYPT_PRIVATE_SRCS
     encrypt/RuntimeApi.cpp)
 
 set(XENCRYPT_PLGUIN_XEF_HDRS
-    encrypt/plugin/xef/XEFConsts.h
+    encrypt/plugin/xef/XEFHeader.h
+    encrypt/plugin/xef/XEncodeType.h
     encrypt/plugin/xef/XEFDecoder.h
     encrypt/plugin/xef/XEFEncoder.h
+    encrypt/plugin/xef/XEFEncryptPlugin.h
+    encrypt/plugin/xef/XEFRuntimeApi.h
 )
 
 set(XENCRYPT_PLGUIN_XEF_SRCS
     encrypt/plugin/xef/XEFDecoder.cpp
     encrypt/plugin/xef/XEFEncoder.cpp
+    encrypt/plugin/xef/XEFEncryptPlugin.cpp
+    encrypt/plugin/xef/XEFRuntimeApi.cpp
 )
 
 add_library(XEncrypt SHARED 

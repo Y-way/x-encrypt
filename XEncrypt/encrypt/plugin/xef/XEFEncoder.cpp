@@ -2,17 +2,18 @@
 #include "common/Allocator.h"
 #include "common/ZipUtils.h"
 
-#include "XEFEncoder.h"
-#include "XEFConsts.h"
-
 #include "service/Common.h"
 #include "service/XService.h"
 
 
+#include "XEFEncoder.h"
+#include "XEFHeader.h"
+#include "XEncodeType.h"
+#include "XEFEncryptPlugin.h"
 
 namespace xencrypt
 {
-    void XEFEncoder::Encode(XContext* context, uint8_t encryptSize, XEncodeType type)
+    void XEFEncoder::Encode(XContext* context)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
         if (context->GetType() != XContextType::XEncrypt)
@@ -38,7 +39,7 @@ namespace xencrypt
         size_t unpackedLen = inSize;
         context->SetMemoryType(XCodeMemoryType::OriginalOffset);
 
-        if (XService::IsEncrypted(input, inSize))//XEncode file.
+        if (XEFEncryptPlugin::IsEncrypted(input, inSize))//XEncode file.
         {
             context->SetResultCode(ResultCode::EncryptedData);
             return;
@@ -48,9 +49,9 @@ namespace xencrypt
         memset(&xHeader, 0, sizeof(XEFHeader));
         xHeader.sign = (*((unsigned*)(&kXFileSignatureCode)));
         xHeader.offset = sizeof(XEFHeader);
-        xHeader.encode_type = (uint8_t)type;
+        xHeader.encode_type = (uint8_t)_encodeType;
         xHeader.version = 1;
-        xHeader.encrypt_data_size = encryptSize;
+        xHeader.encrypt_data_size = _encryptSize;
         byte* xefData = nullptr;
         byte* encodeData = nullptr;
         unsigned long dataSize = 0;

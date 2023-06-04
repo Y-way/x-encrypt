@@ -391,10 +391,6 @@ static const uintptr_t kUIntPtrMax = UINT32_MAX;
 #define X_ENCRYPT_HAS_DELETED_FUNCTIONS 0
 #endif
 
-static const byte kXFileSignatureCode[] = { '@', 'X', 'F', 'E' };
-template<typename T = uint32_t>
-bool IS_XFILE_SIGNATURE_CODE(T code) { return (code == *((uint32_t*)(&kXFileSignatureCode)));}
-
 #if X_ENCRYPT_COMPILER_MSVC
 #define X_ENCRYPT_ATTRIBUTE_WEAK
 #else

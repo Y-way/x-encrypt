@@ -10,6 +10,11 @@
 
 #include "encrypt/RuntimeApi.h"
 
+#include "encrypt/plugin/xef/XEFHeader.h"
+#include "encrypt/plugin/xef/XEncodeType.h"
+#include "encrypt/plugin/xef/XEFEncryptPlugin.h"
+#include "encrypt/plugin/xef/XEFRuntimeApi.h"
+
 using namespace std;
 using namespace xencrypt;
 
@@ -20,20 +25,22 @@ int main()
 {
     {
         //C++
+        XEFEncryptPlugin* plugin = new XEFEncryptPlugin(XEncodeType::XGZip, 32);
         
-        //start service
-        XService::Initialize();
-
 
         //Encrypting data
-        // if(XService::IsEncrypted(data, length))
-        // {
-        //     cout>>"data has been encrypted."<<endl;
-        // }
+        
+        //if(XEFEncryptPlugin::IsEncrypted(rawData, length))
+        //{
+        //    cout>>"data has been encrypted."<<endl;
+        //}
+        
+        //start service
+        XService::Initialize(plugin);
 
         XContext* pContext = XService::CreateContext(XContextType::XEncrypt);
 
-        ResultCode result = XService::Encrypt(pContext, rawData, length, 32, XEncodeType::XGZip);
+        ResultCode result = XService::Encrypt(pContext, rawData, length);
 
         const byte* encryptedData = nullptr;
         int64_t encryptedDataLength = pContext->GetResultDataLength();
@@ -54,11 +61,10 @@ int main()
 
         //Decrypting data
 
-        // if(!XService::IsEncrypted(data, length))
+        // if(!XEFEncryptPlugin::IsEncrypted(encryptedData, length))
         // {
         //     cout>>"data dose not have been encrypted."<<endl;
         // }
-
 
         pContext = XService::CreateContext(XContextType::XDecrypt);
         result = XService::Decrypt(pContext, encryptedData, encryptedDataLength, true);
@@ -80,17 +86,20 @@ int main()
 
         //stop service
         XService::UnInitialize();
+
+        delete plugin;
+        plugin = nullptr;
     }
 
     {
         //C API
-
+        void* plugin = xefencrypt_plugin_create(XEncodeType::XGZip, 32);
         //start service
-        xencrypt_service_initialize();
+        xencrypt_service_initialize(plugin);
 
         //Encrypting data
         // 
-        // if(xencrypt_service_is_encrypted(data, length))
+        // if(xefencrypt_is_encrypted(data, length))
         // {
         //     printf("data has been encrypted.");
         // }
@@ -100,7 +109,7 @@ int main()
         void* pEncryptBuff = nullptr;
         int64_t encryptedDataLength = 0;
 
-        int result = xencrypt_service_encrypt(pContext, rawData, length, &pEncryptBuff, &encryptedDataLength, 32, 1);
+        int result = xencrypt_service_encrypt(pContext, rawData, length, &pEncryptBuff, &encryptedDataLength);
 
         const byte* encryptedData = nullptr;
         if (result != ResultCode::Ok)
@@ -119,7 +128,7 @@ int main()
 
         //Decrypting data
 
-        // if(!xencrypt_service_is_encrypted(data, length))
+        // if(!xefencrypt_is_encrypted(data, length))
         // {
         //     printf("data dose not have been encrypted.");
         // }
@@ -145,6 +154,8 @@ int main()
         XMEMORY_SAFE_FREE(encryptedData);
         //stop service
         xencrypt_service_deinitialize();
+
+        xefencrypt_plugin_destroy(plugin);
     }
     getchar();
 }

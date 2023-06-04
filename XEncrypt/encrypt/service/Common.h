@@ -2,100 +2,59 @@
 
 namespace xencrypt
 {
-    /// <summary>
-    /// 服务上下文处理输出数据时,使用的内存缓存类型
-    /// </summary>
+    /// @brief 服务上下文处理输出数据时,使用的内存缓存类型
     enum XCodeMemoryType
     {
         None,
-        /// <summary>
-        /// 申请新内存
-        /// </summary>
+        /// @brief 申请新内存
         AllocateMemory,
-        /// <summary>
-        /// 源数据内存偏移
-        /// </summary>
+        /// @brief 源数据内存偏移
         OriginalOffset,
     };
-
-    /// <summary>
-    /// 服务上下文类型
-    /// </summary>
+    /// @brief 服务上下文类型
     enum XContextType
     {
-        /// <summary>
-        /// 未知
-        /// </summary>
+        /// @brief 未知
         XUnknown,
-        /// <summary>
-        /// 加密上下文
-        /// </summary>
+        /// @brief 加密上下文
         XEncrypt,
-        /// <summary>
-        /// XEF解密上下文
-        /// </summary>
+        /// @brief 解密上下文
         XDecrypt,
     };
-    /// <summary>
-    /// 服务上下文处理数据结构状态
-    /// </summary>
+    /// @brief 服务上下文处理数据结构状态
     enum ResultCode
     {
-        /// <summary>
-        /// 完成
-        /// </summary>
+        /// @brief 完成
         Ok,
-        /// <summary>
-        /// 未知
-        /// </summary>
+        /// @brief 未知
         Unknown,
-        /// <summary>
-        /// 服务未初始化
-        /// </summary>
+        /// @brief 服务未初始化
         UnInitialize,
-        /// <summary>
-        /// 无效的输入数据
-        /// </summary>
+        /// @brief 无效的加密/解密插件
+        InvalidPlugin,
+        /// @brief 无效的输入数据
         InvalidInputData,
-        /// <summary>
-        /// 解密数据长度错误
-        /// </summary>
+        /// @brief 无效的上下文
+        InvalidXContext,
+        /// @brief 解密数据长度错误
         InvalidInputDataSize,
-        /// <summary>
-        /// 无效的解密器
-        /// </summary>
+        /// @brief 无效的解密器
         InvalidDecoder,
-        /// <summary>
-        /// 解密数据解压缩失败
-        /// </summary>
+        /// @brief 解密数据解压缩失败
         InvalidUnzip,
-        /// <summary>
-        /// 无效的加密器
-        /// </summary>
+        /// @brief 无效的加密器
         InvalidEncoder,
-        /// <summary>
-        /// 数据GZip压缩编码失败
-        /// </summary>
+        /// @brief 数据GZip压缩编码失败
         InvalidZip,
-        /// <summary>
-        /// 数据已加密
-        /// </summary>
+        /// @brief 数据已加密
         EncryptedData,
-        /// <summary>
-        /// 内存不足
-        /// </summary>
+        /// @brief 内存不足
         OutMemory,
-        /// <summary>
-        /// 服务上下文类型不匹配
-        /// </summary>
+        /// @brief 服务上下文类型不匹配
         ContextTypeError,
-        /// <summary>
-        /// 不支持解密服务
-        /// </summary>
+        /// @brief 不支持解密服务
         NotSupportDecrypt,
-        /// <summary>
-        /// 不支持加密服务
-        /// </summary>
+        /// @brief 不支持加密服务
         NotSupportEncrypt,
     };
 }
