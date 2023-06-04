@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace encrypt
+namespace xencrypt
 {    /// <summary>
     /// 加密服务时,源数据加密编码格式
     /// </summary>

@@ -3,7 +3,7 @@
 #include <cassert>
 #include "Logging.h"
 
-using namespace encrypt;
+using namespace xencrypt;
 
 static void DefaultLogCallback(const char* message)
 {

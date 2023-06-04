@@ -7,7 +7,7 @@
 #include "XEFDecoder.h"
 #include "XEFConsts.h"
 
-namespace encrypt
+namespace xencrypt
 {
     namespace
     {

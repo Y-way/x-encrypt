@@ -10,7 +10,7 @@
 #include "XContext.h"
 #include "plugin/xef/XEFConsts.h"
 
-namespace encrypt
+namespace xencrypt
 {
 
     class XENCRYPT_API XService

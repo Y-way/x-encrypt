@@ -7,7 +7,7 @@
 #include "plugin/xef/XEFEncoder.h"
 #include "plugin/xef/XEFDecoder.h"
 
-namespace encrypt
+namespace xencrypt
 {
     static XService* s_instance = nullptr;
 

@@ -7,7 +7,7 @@
 #include <string.h>
 #include <memory>
 
-namespace encrypt
+namespace xencrypt
 {
 #define BUFFER_INC_FACTOR (2)
 
@@ -247,7 +247,7 @@ namespace encrypt
             } while (strm.avail_out == 0);
 
             if (strm.avail_in != 0);   /* all input will be used */
-            break;
+                break;
 
             /* done when last data in file processed */
         } while (flush != Z_FINISH);
@@ -303,13 +303,13 @@ namespace encrypt
                 ret = inflate(&strm, Z_NO_FLUSH);
                 if (ret == Z_STREAM_ERROR) /* state not clobbered */
                     break;
-                switch (ret) 
+                switch (ret)
                 {
-                    case Z_NEED_DICT:
-                        ret = Z_DATA_ERROR;   /* and fall through */
-                    case Z_DATA_ERROR:
-                    case Z_MEM_ERROR:
-                        return ret;
+                case Z_NEED_DICT:
+                    ret = Z_DATA_ERROR;   /* and fall through */
+                case Z_DATA_ERROR:
+                case Z_MEM_ERROR:
+                    return ret;
                 }
                 have = GZIP_CHUNK_SIZE - strm.avail_out;
                 out_str.append((const char*)out, have);

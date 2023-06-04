@@ -125,7 +125,7 @@ namespace XMemory
     };
 }
 
-namespace encrypt
+namespace xencrypt
 {
     static XMemory::XMemoryCallbacks s_Callbacks = XMemory::DefaultCallbacks;
 
@@ -168,4 +168,4 @@ namespace encrypt
     {
         return s_Callbacks.aligned_realloc_func(memory, newSize, alignment);
     }
-} /* namespace encrypt */
+} /* namespace xencrypt */

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace encrypt
+namespace xencrypt
 {
     /// <summary>
     /// 服务上下文处理输出数据时,使用的内存缓存类型

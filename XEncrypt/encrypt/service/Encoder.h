@@ -3,7 +3,7 @@
 #include "XContext.h"
 #include <plugin/xef/XEFConsts.h>
 
-namespace encrypt
+namespace xencrypt
 {
     /// <summary>
     /// 加密器

@@ -10,7 +10,7 @@
 
 
 
-namespace encrypt
+namespace xencrypt
 {
     void XEFEncoder::Encode(XContext* context, uint8_t encryptSize, XEncodeType type)
     {

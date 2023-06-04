@@ -2,10 +2,10 @@
 
 #include <stdint.h>
 #include "config.h"
+#include "XEFConsts.h"
 #include "service/Encoder.h"
-#include "plugin/xef/XEFConsts.h"
 
-namespace encrypt
+namespace xencrypt
 {
 	/// <summary>
 	/// XEF格式加密器
