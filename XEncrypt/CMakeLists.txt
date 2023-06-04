@@ -25,12 +25,9 @@ message(STATUS "CMAKE_CURRENT_LIST_DIR:${CMAKE_CURRENT_LIST_DIR}")
 
 message(STATUS "SUPPORT_ENCRYPT:${SUPPORT_ENCRYPT}")
 message(STATUS "SUPPORT_DECRYPT:${SUPPORT_DECRYPT}")
-# 安装拷贝
-#设置变量
-# set(OPENCV_DLL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/OpenCV/bin)
+
 # 设置输出目录
-#set(OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
-set(OUTPUT_PATH "${PROJECT_SOURCE_DIR}/../../Assets/Editor/HybridCLR/External/xEncrypt/lib/x86_64")
+set(OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib/x86_64")
 
 # 设置可执行文件的输出路径：
 # set(EXECUTABLE_OUTPUT_PATH "${OUTPUT_PATH}/bin/")
@@ -58,19 +55,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OUTPUT_PATH})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${OUTPUT_PATH})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${OUTPUT_PATH})
 
-
-# install
-# install用于指定在安装时运行的规则。它可以用来安装很多内容，可以包括目标二进制、动态库、静态库以及文件、目录、脚本等：
-# install(TARGETS <target>... [...])
-# install({FILES | PROGRAMS} <file>... [...])
-# install(DIRECTORY <dir>... [...])
-# install(SCRIPT <file> [...])
-# install(CODE <code> [...])
-# install(EXPORT <export-name> [...])
-# 一般复制或文件夹
-# install(DIRECTORY ${PROJECT_BINARY_DIR}/bin DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-# //将生成的文件夹下内容全部拷贝到，指定目标目录；
-
 message(STATUS "EXECUTABLE_OUTPUT_PATH:${EXECUTABLE_OUTPUT_PATH}")
 message(STATUS "LIBRARY_OUTPUT_PATH:${EXECUTABLE_OUTPUT_PATH}")
 
@@ -93,7 +77,6 @@ endif()
 # 添加 include 路径
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/encrypt")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/encrypt/common")
 
 set(XXHASH_HDRS
     encrypt/xxHash/xxh3.h
@@ -140,44 +123,45 @@ set(ZLIB_SRCS
 )
 
 set(XENCRYPT_PUBLIC_HDRS
-    "encrypt/api_types.h"
-    "encrypt/config.h"
-    "encrypt/config_api.h"
-    "encrypt/config_api_platforms.h"
-    "encrypt/config_platforms.h"
-    "encrypt/RuntimeApi.h")
+    encrypt/api_types.h
+    encrypt/config.h
+    encrypt/config_api.h
+    encrypt/config_api_platforms.h
+    encrypt/config_platforms.h
+    encrypt/RuntimeApi.h)
 
 set(XENCRYPT_PRIVATE_HDRS
-    "encrypt/common/Allocator.h"
-    "encrypt/common/XAssert.h"
-    "encrypt/common/Common.h" 
-    "encrypt/common/Logging.h"
-    "encrypt/common/ZipUtils.h" 
-    "encrypt/Decoder.h"
-    "encrypt/XService.h"
-    "encrypt/XEFDecoder.h"
-    "encrypt/XEFEncoder.h"
-    "encrypt/XContext.h" 
-    "encrypt/Encoder.h")
+    encrypt/common/Allocator.h
+    encrypt/common/XAssert.h
+    encrypt/common/Common.h 
+    encrypt/common/Logging.h
+    encrypt/common/ZipUtils.h 
+    encrypt/Decoder.h
+    encrypt/XService.h
+    encrypt/XEFDecoder.h
+    encrypt/XEFEncoder.h
+    encrypt/XContext.h 
+    encrypt/Encoder.h)
 
 set(XENCRYPT_PRIVATE_SRCS
-    "encrypt/common/Allocator.cpp"
-    "encrypt/common/XAssert.cpp"
-    "encrypt/common/Logging.cpp"
-    "encrypt/common/ZipUtils.cpp"
-    "encrypt/XService.cpp"
-    "encrypt/api_types.h"
-    "encrypt/config.h"
-    "encrypt/config_api.h"
-    "encrypt/config_api_platforms.h"
-    "encrypt/config_platforms.h"
-    "encrypt/XEFEncoder.cpp"
-    "encrypt/XEFDecoder.cpp"
-    "encrypt/XContext.cpp"
-    "encrypt/RuntimeApi.cpp")
+    encrypt/common/Allocator.cpp
+    encrypt/common/XAssert.cpp
+    encrypt/common/Logging.cpp
+    encrypt/common/ZipUtils.cpp
+    encrypt/XService.cpp
+    encrypt/api_types.h
+    encrypt/config.h
+    encrypt/config_api.h
+    encrypt/config_api_platforms.h
+    encrypt/config_platforms.h
+    encrypt/XEFEncoder.cpp
+    encrypt/XEFDecoder.cpp
+    encrypt/XContext.cpp
+    encrypt/RuntimeApi.cpp)
 
 add_library(XEncrypt SHARED 
-    ${XXHASH_SRCS} ${XXHASH_HDRS} 
+    ${XXHASH_SRCS} 
+    ${XXHASH_HDRS} 
     ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} 
     ${ZLIB_PUBLIC_HDRS} 
     ${ZLIB_PRIVATE_HDRS} 
@@ -186,7 +170,8 @@ add_library(XEncrypt SHARED
     ${XENCRYPT_PRIVATE_SRCS})
 
 add_library(libXEncrypt STATIC 
-    ${XXHASH_SRCS} ${XXHASH_HDRS}
+    ${XXHASH_SRCS} 
+    ${XXHASH_HDRS}
     ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS}
     ${ZLIB_PRIVATE_HDRS}
     ${XENCRYPT_PUBLIC_HDRS}
@@ -211,35 +196,9 @@ endif()
 
 set_target_properties(XEncrypt PROPERTIES SOVERSION 1)
 
-# set_target_properties( targets...
-#    PROPERTIES
-#    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-#    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-#    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-#)
-
-# 为生成的target配置安装目录
-#install(TARGETS MyLib
-#        EXPORT MyLibTargets 
-#        LIBRARY DESTINATION lib  # 动态库安装路径(可选)
-#        ARCHIVE DESTINATION lib  # 静态库安装路径(可选)
-#        RUNTIME DESTINATION bin  # 可执行文件安装路径(可选)
-#        PUBLIC_HEADER DESTINATION include  # 头文件安装路径(可选)
-#        )
-# LIBRARY, ARCHIVE, RUNTIME, PUBLIC_HEADER是可选的，可以根据需要进行选择。 
-# DESTINATION后面的路径可以自行制定，根目录默认为CMAKE_INSTALL_PREFIX,可以试用set方法进行指定，
-# 如果使用默认值的话，Unix系统的默认值为 /usr/local, 
-# Windows的默认值为 c:/Program Files/${PROJECT_NAME}。
-# 比如字linux系统下若LIBRARY的安装路径指定为lib,即为/usr/local/lib。
-# 所以要安装mymath mymathapp我们可以这样写
-
-
-#install (TARGETS XEncrypt DESTINATION bin)
-#install (FILES ${XENCRYPT_PUBLIC_HDRS} DESTINATION include)
-# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 # 将源代码添加到此项目的可执行文件。
 # 可执行文件名，通过指定的源文件列表构建出可执行目标文件：
-add_executable (CXEncrypt "CXEncrypt.cpp" "CXEncrypt.h")
+add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
 # 设置链接库名称：
 target_link_libraries(CXEncrypt libXEncrypt)
 
