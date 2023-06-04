@@ -1,5 +1,6 @@
 ﻿#include "XContext.h"
 #include "common/Allocator.h"
+
 namespace encrypt
 {
     XContext::XContext(XContextType type)

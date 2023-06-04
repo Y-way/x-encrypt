@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "XContext.h"
+#include <plugin/xef/XEFConsts.h>
 
 namespace encrypt
 {

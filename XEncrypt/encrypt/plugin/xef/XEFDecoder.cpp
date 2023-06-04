@@ -1,9 +1,11 @@
-﻿#include "XEFDecoder.h"
-#include "XService.h"
-#include "common/Logging.h"
+﻿#include "common/Logging.h"
 #include "common/Allocator.h"
 #include "common/ZipUtils.h"
-#include "common/Common.h"
+#include "service/Common.h"
+#include "service/XService.h"
+
+#include "XEFDecoder.h"
+#include "XEFConsts.h"
 
 namespace encrypt
 {
@@ -81,7 +83,7 @@ namespace encrypt
     void XEFDecoder::Decode(XContext* context)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
-        if(context->GetType() != XContextType::Decrypt)
+        if(context->GetType() != XContextType::XDecrypt)
         {
             context->SetResultCode(ResultCode::ContextTypeError);
             return;

@@ -133,31 +133,38 @@ set(XENCRYPT_PUBLIC_HDRS
 set(XENCRYPT_PRIVATE_HDRS
     encrypt/common/Allocator.h
     encrypt/common/XAssert.h
-    encrypt/common/Common.h 
     encrypt/common/Logging.h
     encrypt/common/ZipUtils.h 
-    encrypt/Decoder.h
-    encrypt/XService.h
-    encrypt/XEFDecoder.h
-    encrypt/XEFEncoder.h
-    encrypt/XContext.h 
-    encrypt/Encoder.h)
+    encrypt/service/Common.h 
+    encrypt/service/Decoder.h
+    encrypt/service/Encoder.h
+    encrypt/service/XContext.h
+    encrypt/service/XService.h)
 
 set(XENCRYPT_PRIVATE_SRCS
     encrypt/common/Allocator.cpp
     encrypt/common/XAssert.cpp
     encrypt/common/Logging.cpp
     encrypt/common/ZipUtils.cpp
-    encrypt/XService.cpp
+    encrypt/service/XService.cpp
+    encrypt/service/XContext.cpp
     encrypt/api_types.h
     encrypt/config.h
     encrypt/config_api.h
     encrypt/config_api_platforms.h
     encrypt/config_platforms.h
-    encrypt/XEFEncoder.cpp
-    encrypt/XEFDecoder.cpp
-    encrypt/XContext.cpp
     encrypt/RuntimeApi.cpp)
+
+set(XENCRYPT_PLGUIN_XEF_HDRS
+    encrypt/plugin/xef/XEFConsts.h
+    encrypt/plugin/xef/XEFDecoder.h
+    encrypt/plugin/xef/XEFEncoder.h
+)
+
+set(XENCRYPT_PLGUIN_XEF_SRCS
+    encrypt/plugin/xef/XEFDecoder.cpp
+    encrypt/plugin/xef/XEFEncoder.cpp
+)
 
 add_library(XEncrypt SHARED 
     ${XXHASH_SRCS} 
@@ -167,7 +174,9 @@ add_library(XEncrypt SHARED
     ${ZLIB_PRIVATE_HDRS} 
     ${XENCRYPT_PUBLIC_HDRS} 
     ${XENCRYPT_PRIVATE_HDRS} 
-    ${XENCRYPT_PRIVATE_SRCS})
+    ${XENCRYPT_PRIVATE_SRCS}
+    ${XENCRYPT_PLGUIN_XEF_HDRS}
+    ${XENCRYPT_PLGUIN_XEF_SRCS})
 
 add_library(libXEncrypt STATIC 
     ${XXHASH_SRCS} 
@@ -176,7 +185,9 @@ add_library(libXEncrypt STATIC
     ${ZLIB_PRIVATE_HDRS}
     ${XENCRYPT_PUBLIC_HDRS}
     ${XENCRYPT_PRIVATE_HDRS} 
-    ${XENCRYPT_PRIVATE_SRCS} )
+    ${XENCRYPT_PRIVATE_SRCS}
+    ${XENCRYPT_PLGUIN_XEF_HDRS}
+    ${XENCRYPT_PLGUIN_XEF_SRCS})
 
 set_target_properties(XEncrypt PROPERTIES DEFINE_SYMBOL XENCRYPT_EXPORT_API)
 

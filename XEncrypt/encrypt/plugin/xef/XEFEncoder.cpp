@@ -1,16 +1,21 @@
-﻿#include "XEFEncoder.h"
-#include "XService.h"
-#include "common/Logging.h"
+﻿#include "common/Logging.h"
 #include "common/Allocator.h"
 #include "common/ZipUtils.h"
-#include "common/Common.h"
+
+#include "XEFEncoder.h"
+#include "XEFConsts.h"
+
+#include "service/Common.h"
+#include "service/XService.h"
+
+
 
 namespace encrypt
 {
     void XEFEncoder::Encode(XContext* context, uint8_t encryptSize, XEncodeType type)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
-        if (context->GetType() != XContextType::Encrypt)
+        if (context->GetType() != XContextType::XEncrypt)
         {
             context->SetResultCode(ResultCode::ContextTypeError);
             return;

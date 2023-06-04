@@ -2,7 +2,8 @@
 
 #include <stdint.h>
 #include "config.h"
-#include "Encoder.h"
+#include "service/Encoder.h"
+#include "plugin/xef/XEFConsts.h"
 
 namespace encrypt
 {

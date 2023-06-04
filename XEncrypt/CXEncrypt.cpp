@@ -2,9 +2,9 @@
 //
 
 #include "CXEncrypt.h"
-#include "encrypt/XService.h"
-#include "encrypt/XContext.h"
-#include "encrypt/common/Common.h"
+#include "encrypt/service/XService.h"
+#include "encrypt/service/XContext.h"
+#include "encrypt/service/Common.h"
 #include "encrypt/RuntimeApi.h"
 #include "encrypt/common/Allocator.h"
 
@@ -31,7 +31,7 @@ int main()
         //     cout>>"data has been encrypted."<<endl;
         // }
 
-        XContext* pContext = XService::CreateContext(XContextType::Encrypt);
+        XContext* pContext = XService::CreateContext(XContextType::XEncrypt);
 
         ResultCode result = XService::Encrypt(pContext, rawData, length, 32, XEncodeType::XGZip);
 
@@ -60,7 +60,7 @@ int main()
         // }
 
 
-        pContext = XService::CreateContext(XContextType::Decrypt);
+        pContext = XService::CreateContext(XContextType::XDecrypt);
         result = XService::Decrypt(pContext, encryptedData, encryptedDataLength, true);
 
         const byte* decryptedData = pContext->GetResultData();
@@ -95,7 +95,7 @@ int main()
         //     printf("data has been encrypted.");
         // }
 
-        void* pContext = decrypt_create_xcontext(XContextType::Encrypt);
+        void* pContext = decrypt_create_xcontext(XContextType::XEncrypt);
 
         void* pEncryptBuff = nullptr;
         int64_t encryptedDataLength = 0;
@@ -125,7 +125,7 @@ int main()
         // }
 
 
-        pContext = decrypt_create_xcontext(XContextType::Decrypt);
+        pContext = decrypt_create_xcontext(XContextType::XDecrypt);
 
         void* decryptedData = nullptr;
         int64_t decryptedDataLength = 0;

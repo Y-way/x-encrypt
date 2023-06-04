@@ -1,9 +1,11 @@
-﻿#include "XService.h"
-#include "common/Allocator.h"
+﻿#include "common/Allocator.h"
 #include "common/Logging.h"
-#include "XEFDecoder.h"
-#include "common/Common.h"
-#include "XEFEncoder.h"
+#include "XService.h"
+#include "Common.h"
+
+#include "plugin/xef/XEFConsts.h"
+#include "plugin/xef/XEFEncoder.h"
+#include "plugin/xef/XEFDecoder.h"
 
 namespace encrypt
 {

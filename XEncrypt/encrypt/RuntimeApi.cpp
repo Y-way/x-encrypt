@@ -1,8 +1,7 @@
-﻿
-#include "RuntimeApi.h"
-#include "XService.h"
-#include "XContext.h"
-#include "XEFDecoder.h"
+﻿#include "RuntimeApi.h"
+#include "service/XService.h"
+#include "service/XContext.h"
+#include "plugin/xef/XEFDecoder.h"
 
 using namespace encrypt;
 

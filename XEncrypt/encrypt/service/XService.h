@@ -1,11 +1,14 @@
 ﻿#pragma once
 
 #include <stdint.h>
-#include "common/Common.h"
+
+#include "config.h"
+#include "Common.h"
 
 #include "Decoder.h"
 #include "Encoder.h"
 #include "XContext.h"
+#include "plugin/xef/XEFConsts.h"
 
 namespace encrypt
 {

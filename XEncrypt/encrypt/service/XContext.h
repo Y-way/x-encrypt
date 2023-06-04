@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "config.h"
-#include "common/Common.h"
+#include "Common.h"
 
 namespace encrypt
 {
