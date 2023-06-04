@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "config.h"
 
@@ -46,3 +46,11 @@ namespace encrypt
 #define XMEMORY_CALLOC(count, size) encrypt::MemoryAllocator::Calloc(count,size)
 #define XMEMORY_REALLOC(memory, newSize) encrypt::MemoryAllocator::Realloc(memory,newSize)
 #define XMEMORY_REALLOC_ALIGNED(memory, newSize, alignment) encrypt::MemoryAllocator::AlignedRealloc(memory, newSize, alignment)
+
+#define XMEMORY_SAFE_FREE(memory) \
+{\
+    void* pMem = (void*)(memory); \
+    if(pMem != nullptr) \
+        encrypt::MemoryAllocator::Free(pMem); \
+    pMem = nullptr; \
+}
