@@ -86,21 +86,21 @@ int main()
         //C API
 
         //start service
-        decrypt_service_initialize();
+        xencrypt_service_initialize();
 
         //Encrypting data
         // 
-        // if(decrypt_service_is_encrypted(data, length))
+        // if(xencrypt_service_is_encrypted(data, length))
         // {
         //     printf("data has been encrypted.");
         // }
 
-        void* pContext = decrypt_create_xcontext(XContextType::XEncrypt);
+        void* pContext = xencrypt_create_xcontext(XContextType::XEncrypt);
 
         void* pEncryptBuff = nullptr;
         int64_t encryptedDataLength = 0;
 
-        int result = decrypt_service_encrypt(pContext, rawData, length, &pEncryptBuff, &encryptedDataLength, 32, 1);
+        int result = xencrypt_service_encrypt(pContext, rawData, length, &pEncryptBuff, &encryptedDataLength, 32, 1);
 
         const byte* encryptedData = nullptr;
         if (result != ResultCode::Ok)
@@ -114,22 +114,22 @@ int main()
             memcpy((void*)encryptedData, pEncryptBuff, encryptedDataLength);
         }
 
-        decrypt_release_xcontext(pContext);
+        xencrypt_release_xcontext(pContext);
 
 
         //Decrypting data
 
-        // if(!decrypt_service_is_encrypted(data, length))
+        // if(!xencrypt_service_is_encrypted(data, length))
         // {
         //     printf("data dose not have been encrypted.");
         // }
 
 
-        pContext = decrypt_create_xcontext(XContextType::XDecrypt);
+        pContext = xencrypt_create_xcontext(XContextType::XDecrypt);
 
         void* decryptedData = nullptr;
         int64_t decryptedDataLength = 0;
-        result = decrypt_service_decrypt(pContext, encryptedData, encryptedDataLength, &decryptedData, &decryptedDataLength);
+        result = xencrypt_service_decrypt(pContext, encryptedData, encryptedDataLength, &decryptedData, &decryptedDataLength);
 
         if (result != ResultCode::Ok)
         {
@@ -140,11 +140,11 @@ int main()
             //continue to do something for decryptedData.
         }
         
-        decrypt_release_xcontext(pContext);
+        xencrypt_release_xcontext(pContext);
 
         XMEMORY_SAFE_FREE(encryptedData);
         //stop service
-        decrypt_service_deinitialize();
+        xencrypt_service_deinitialize();
     }
     getchar();
 }
