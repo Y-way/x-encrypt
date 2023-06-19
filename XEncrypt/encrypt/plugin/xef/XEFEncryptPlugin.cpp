@@ -51,7 +51,7 @@ namespace xencrypt
         _encoder->Encode(context);
     }
 
-    void XEFEncryptPlugin::Dencrypt(XContext* context)
+    void XEFEncryptPlugin::Decrypt(XContext* context)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
         if (_decoder == nullptr)

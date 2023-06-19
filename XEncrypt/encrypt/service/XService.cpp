@@ -62,7 +62,7 @@ namespace xencrypt
         {
             context->SetCloneInputDataFlag(cloneInput);
             context->SetInputData(input, length);
-            s_instance->_plugin->Dencrypt(context);
+            s_instance->_plugin->Decrypt(context);
         }
         return context->GetResultCode();
     }

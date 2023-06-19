@@ -32,6 +32,6 @@ namespace xencrypt
         virtual void Encrypt(XContext* context) final;
         /// @brief 解密
         /// @param context 解密上下文
-        virtual void Dencrypt(XContext* context)  final;
+        virtual void Decrypt(XContext* context)  final;
     };
 }

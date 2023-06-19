@@ -25,7 +25,7 @@ namespace xencrypt
         virtual void Encrypt(XContext* context) = 0;
         /// @brief 解密抽象接口
         /// @param context 上下文实例
-        virtual void Dencrypt(XContext* context) = 0;
+        virtual void Decrypt(XContext* context) = 0;
 
     protected:
         Encoder* _encoder;
