@@ -16,6 +16,15 @@ namespace xencrypt
 
     XEFEncryptPlugin::~XEFEncryptPlugin()
     {
+#if XEF_ENCRYPT_SERVICE
+        delete _encoder;
+        _encoder = nullptr;
+#endif // XEF_ENCRYPT_SERVICE
+
+#if XEF_DECRYPT_SERVICE
+        delete _decoder;
+        _decoder = nullptr;
+#endif // XEF_DECRYPT_SERVICE
     }
     
     bool XEFEncryptPlugin::IsEncrypted(const byte* data, int64_t size)
