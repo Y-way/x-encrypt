@@ -38,7 +38,7 @@ namespace xencrypt
         * Z_VERSION_ERROR if the version of zlib.h and the version of the library linked do not match
         * or Z_ERRNO if there is an error reading or writing the files. 
         */
-        static int ZipUtils::GZipDecompress(const byte* in_str, size_t in_len, std::string& out_str);
+        static int GZipDecompress(const byte* in_str, size_t in_len, std::string& out_str);
 		/**
 		* Inflates either zlib or gzip deflated memory. The inflated memory is expected to be freed by the caller.
 		* @param outLengthHint It is assumed to be the needed room to allocate the inflated buffer.
