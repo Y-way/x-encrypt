@@ -23,6 +23,8 @@ jobs:
           cd ./scripts
           sudo apt-get update --fix-missing
           sudo apt install gcc-multilib
+          sudo chmod +777 ./build_android.sh
+          sudo chmod +777 ./build_android_arm64.sh
           ./build_android.sh
           ./build_android_arm64.sh
       - name: Upload
@@ -37,6 +39,7 @@ jobs:
       - name: Build
         run: |
           cd ./scripts
+          sudo chmod +777 ./build_linux.sh
           ./build_linux.sh
       - name: Upload
         uses: actions/upload-artifact@v3
@@ -54,6 +57,7 @@ jobs:
       - name: Build
         run: |
           cd ./scripts
+          sudo chmod +777 ./build_ios.sh
           ./build_ios.sh
       - name: Upload
         uses: actions/upload-artifact@v3
@@ -69,6 +73,7 @@ jobs:
       - name: Build
         run: |
           cd ./scripts
+          sudo chmod +777 ./build_osx.sh
           ./build_osx.sh
       - name: Upload
         uses: actions/upload-artifact@v3
