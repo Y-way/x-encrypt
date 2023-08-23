@@ -1,7 +1,7 @@
 name: build
 on: 
   push:
-    branches: [ "v1.0" ]
+    branches: [ "main" ]
     paths: 
       - .github/workflows/build.yml
 
