@@ -3,6 +3,7 @@ on:
   push:
     branches: [ "main" ]
     paths: 
+      - XEncrypt/**
       - .github/workflows/build.yml
 
 jobs:
