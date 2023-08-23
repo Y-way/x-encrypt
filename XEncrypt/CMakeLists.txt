@@ -1,4 +1,45 @@
-cmake_minimum_required (VERSION 3.8)
+# CMakeList.txt: 顶层 CMake 项目文件，在此处执行全局配置
+# 并包含子项目。
+#
+
+#define_source_files（）
+
+#Project(CmakeTest)
+#aux_source_directory(. src)
+#add_executable(project1 ${src})                        #编译为可执行程序
+#add_library(project1 ${src})                           #编译为静态库
+#add_library(project1 SHARED ${src})                    #编译为动态链接库
+
+#add_executable(project1 MACOSX_BUNDLE ${src})          #编译为可执行程序 *.app
+
+#add_library(project1 MODULE ${src})                    #编译为程序资源包 *.bundle
+#set_target_properties(project1 PROPERTIES BUNDLE TRUE)
+
+#add_library(project1 SHARED ${src})                     #编译为程序资源包 *.framework
+#set_target_properties(project1 PROPERTIES FRAMEWORK TRUE)
+
+#SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")  # Debug模式下的编译指令
+#SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")         # Release模式下的编译指令
+
+#SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin)       #设置可执行文件的输出目录
+
+#SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../lib)           #设置库文件的输出目录
+
+
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/bin)   
+
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/../bin) 
+
+#上面两条语句分别设置了Debug版本和Release版本可执行文件的输出目录,
+
+#一旦设置上面的属性,在任何环境下生成的可执行文件都将直接放在你所设置的目录.
+
+#四. set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/../lib)    
+#    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/../lib) 
+
+#上面两条语句分别设置了Debug版本和Release版本库文件的输出目录,
+
+#一旦设置上面的属性,在任何环境下生成的库文件都将直接放在你所设置的目录.
 
 # 当前目录:
 # PROJECT_SOURCE_DIR：工程的根目录
@@ -10,11 +51,32 @@ cmake_minimum_required (VERSION 3.8)
 # EXECUTABLE_OUTPUT_PATH：重新定义目标二进制可执行文件的存放位置
 # LIBRARY_OUTPUT_PATH：重新定义目标链接库文件的存放位置
 
+cmake_minimum_required(VERSION 3.13.0)
+
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+    set (CMAKE_BUILD_TYPE Debug)
+endif()
+
+cmake_policy(SET CMP0079 NEW)
+cmake_policy(SET CMP0048 NEW)
+
+project ("CXEncrypt")
+
+set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+
 option(SUPPORT_ENCRYPT "Support encrypt data sevice" ON)
 option(SUPPORT_DECRYPT "Support decrypt data sevice" ON)
 
 option(LIB_SUPPORT_ENCRYPT "lib supports encrypt data sevice" ON)
 option(LIB_SUPPORT_DECRYPT "lib supports decrypt data sevice" ON)
+
+if(LIB_SUPPORT_ENCRYPT)
+    set(SUPPORT_ENCRYPT ON)
+endif()
+
+if(LIB_SUPPORT_DECRYPT)
+    set(SUPPORT_DECRYPT ON)
+endif()
 
 message(STATUS "PROJECT_SOURCE_DIR:${PROJECT_SOURCE_DIR}")
 message(STATUS "PROJECT_BINARY_DIR:${PROJECT_BINARY_DIR}")
@@ -27,7 +89,7 @@ message(STATUS "SUPPORT_ENCRYPT:${SUPPORT_ENCRYPT}")
 message(STATUS "SUPPORT_DECRYPT:${SUPPORT_DECRYPT}")
 
 # 设置输出目录
-set(OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib/x86_64")
+# set(OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib/x86_64")
 
 # 设置可执行文件的输出路径：
 # set(EXECUTABLE_OUTPUT_PATH "${OUTPUT_PATH}/bin/")
