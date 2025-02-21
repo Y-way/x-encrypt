@@ -106,6 +106,14 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "iOS")
     set(PLATFORM_IOS TRUE)
 endif()
 
+# 检测是否为64位系统
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(STATUS "64-bit system detected")
+    add_definitions(-D_LFS64_LARGEFILE)
+else()
+    message(STATUS "32-bit system detected")
+endif()
+
 # 设置平台特定的编译选项
 if(PLATFORM_WINDOWS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
@@ -225,18 +233,6 @@ set(XENCRYPT_PLGUIN_XEF_SRCS
     encrypt/plugin/xef/XEFRuntimeApi.cpp
 )
 
-add_library(XEncrypt SHARED 
-    ${XXHASH_SRCS} 
-    ${XXHASH_HDRS} 
-    ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} 
-    ${ZLIB_PUBLIC_HDRS} 
-    ${ZLIB_PRIVATE_HDRS} 
-    ${XENCRYPT_PUBLIC_HDRS} 
-    ${XENCRYPT_PRIVATE_HDRS} 
-    ${XENCRYPT_PRIVATE_SRCS}
-    ${XENCRYPT_PLGUIN_XEF_HDRS}
-    ${XENCRYPT_PLGUIN_XEF_SRCS})
-
 add_library(libXEncrypt STATIC 
     ${XXHASH_SRCS} 
     ${XXHASH_HDRS}
@@ -247,6 +243,33 @@ add_library(libXEncrypt STATIC
     ${XENCRYPT_PRIVATE_SRCS}
     ${XENCRYPT_PLGUIN_XEF_HDRS}
     ${XENCRYPT_PLGUIN_XEF_SRCS})
+
+# 在 iOS 平台下不生成 SHARED 库和 CXEncrypt 可执行文件
+if(NOT PLATFORM_IOS)
+    add_library(XEncrypt SHARED 
+        ${XXHASH_SRCS} 
+        ${XXHASH_HDRS} 
+        ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} 
+        ${ZLIB_PUBLIC_HDRS} 
+        ${ZLIB_PRIVATE_HDRS} 
+        ${XENCRYPT_PUBLIC_HDRS} 
+        ${XENCRYPT_PRIVATE_HDRS} 
+        ${XENCRYPT_PRIVATE_SRCS}
+        ${XENCRYPT_PLGUIN_XEF_HDRS}
+        ${XENCRYPT_PLGUIN_XEF_SRCS})
+
+    add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
+    target_link_libraries(CXEncrypt libXEncrypt)
+
+    set_target_properties(CXEncrypt
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
+    )
+
+    if (CMAKE_VERSION VERSION_GREATER 3.12)
+        set_property(TARGET CXEncrypt PROPERTY CXX_STANDARD 14)
+    endif()
+endif()
 
 set_target_properties(XEncrypt PROPERTIES DEFINE_SYMBOL XENCRYPT_EXPORT_API)
 
@@ -282,20 +305,3 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${OUTPUT_PATH})
 
 message(STATUS "EXECUTABLE_OUTPUT_PATH:${EXECUTABLE_OUTPUT_PATH}")
 message(STATUS "LIBRARY_OUTPUT_PATH:${EXECUTABLE_OUTPUT_PATH}")
-
-# 将源代码添加到此项目的可执行文件。
-add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
-target_link_libraries(CXEncrypt libXEncrypt)
-
-set_target_properties(CXEncrypt
-    PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
-)
-
-#设置了Debug版本和Release版本下可执行文件的后缀名
-#set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "_d")     set_target_properties(${TARGET_NAME} PROPERTIES RELEASE_POSTFIX "_r")
-
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET CXEncrypt PROPERTY CXX_STANDARD 14)
-endif()
