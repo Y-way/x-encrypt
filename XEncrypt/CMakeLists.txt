@@ -105,15 +105,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "iOS")
     message(STATUS "Platform: iOS")
     set(PLATFORM_IOS TRUE)
 endif()
-
-# 检测是否为64位系统
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    message(STATUS "64-bit system detected")
-    add_definitions(-D_LFS64_LARGEFILE)
-else()
-    message(STATUS "32-bit system detected")
-endif()
-
+add_definitions(-DZ_HAVE_UNISTD_H)
 # 设置平台特定的编译选项
 if(PLATFORM_WINDOWS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
