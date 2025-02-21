@@ -105,7 +105,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "iOS")
     message(STATUS "Platform: iOS")
     set(PLATFORM_IOS TRUE)
 endif()
-add_definitions(-DZ_HAVE_UNISTD_H)
+
 # 设置平台特定的编译选项
 if(PLATFORM_WINDOWS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
@@ -119,12 +119,16 @@ if(PLATFORM_WINDOWS)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 elseif(PLATFORM_LINUX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
 elseif(PLATFORM_MACOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
 elseif(PLATFORM_ANDROID)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
 elseif(PLATFORM_IOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
 endif()
 
 # 添加 include 路径
@@ -236,9 +240,7 @@ add_library(libXEncrypt STATIC
     ${XENCRYPT_PLGUIN_XEF_HDRS}
     ${XENCRYPT_PLGUIN_XEF_SRCS})
 
-# 在 iOS 平台下不生成 SHARED 库和 CXEncrypt 可执行文件
-if(NOT PLATFORM_IOS)
-    add_library(XEncrypt SHARED 
+add_library(XEncrypt SHARED 
         ${XXHASH_SRCS} 
         ${XXHASH_HDRS} 
         ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} 
@@ -250,6 +252,9 @@ if(NOT PLATFORM_IOS)
         ${XENCRYPT_PLGUIN_XEF_HDRS}
         ${XENCRYPT_PLGUIN_XEF_SRCS})
 
+# 在 iOS 平台下不生成 SHARED 库和 CXEncrypt 可执行文件
+if(NOT PLATFORM_IOS)
+    
     add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
     target_link_libraries(CXEncrypt libXEncrypt)
 
