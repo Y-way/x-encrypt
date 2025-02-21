@@ -7,7 +7,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-#define EXPORT_API(r, n, p)             X_ENCRYPT_EXPORT r n p;
+#define EXPORT_API(r, n, p)             XENCRYPT_API r n p;
     /// @brief 检查数据是否已加密
     /// @param in 内存数据地址
     /// @param in_size 数据长度

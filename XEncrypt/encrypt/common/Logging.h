@@ -6,7 +6,7 @@ namespace xencrypt
 {
     typedef void (*XLogCallback)(const char*);
 
-    class XENCRYPT_API Logging
+    class Logging
     {
     public:
         static void Write(const char* format, ...);

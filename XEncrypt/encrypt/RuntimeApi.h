@@ -7,7 +7,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-#define EXPORT_API(r, n, p)             X_ENCRYPT_EXPORT r n p;
+#define EXPORT_API(r, n, p)             XENCRYPT_API r n p;
     /// @brief 初始化服务
     /// @param plugin 加密/解密插件实例
     EXPORT_API(void, xencrypt_service_initialize, (void* plugin));
