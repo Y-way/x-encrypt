@@ -4,6 +4,8 @@ on:
     branches: [ "main" ]
     paths: 
       - XEncrypt/**
+      - scripts/**
+      - 1k/**
       - .github/workflows/build.yml
 jobs:
   android:
