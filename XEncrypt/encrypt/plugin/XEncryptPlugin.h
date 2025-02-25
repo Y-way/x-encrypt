@@ -17,7 +17,7 @@ namespace xencrypt
         /// @brief 根据XContext上下文类型,判定当前插件是否支持
         /// @param type 加密/解密上下文类型
         /// @return 返回true,支持该类型;否则,不支持.
-        bool IsSupport(XContextType type);
+        bool IsSupport(XContextType type) const;
         
     public:
         /// @brief 加密抽象接口
@@ -32,7 +32,7 @@ namespace xencrypt
         Decoder* _decoder;
     };
 
-    inline bool XEncryptPlugin::IsSupport(XContextType type)
+    inline bool XEncryptPlugin::IsSupport(XContextType type) const
     {
         bool support = false;
         if (type == XContextType::XDecrypt)
