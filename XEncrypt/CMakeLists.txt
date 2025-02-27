@@ -326,8 +326,12 @@ if (APPLE)
     else ()
         # set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_64_BIT)")
         if (BUILD_SHARED_LIBS)
-            add_library(${xencrypt_target_name} MODULE ${XENCRYPT_SOURCES})
-            set_target_properties (${xencrypt_target_name} PROPERTIES BUNDLE TRUE )
+            message(STATUS "ARCHS=${ARCHS}")
+            add_library(${xencrypt_target_name} SHARED ${XENCRYPT_SOURCES})
+            set_target_properties(${xencrypt_target_name} PROPERTIES
+                MACOSX_RPATH ON
+                XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
+                XCODE_ATTRIBUTE_ARCHS "${ARCHS}")
         else()
             add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
         endif()
@@ -364,9 +368,9 @@ endif()
 
 macro(xencrypt_config_lib_depends target_name)
     target_link_libraries(${target_name} ${xencrypt_target_name})
-    if ((NOT WIN32) AND (NOT ANDROID))
-        target_link_libraries(${target_name} pthread)
-    endif()
+    # if ((NOT WIN32) AND (NOT ANDROID))
+    #     target_link_libraries(${target_name} pthread)
+    # endif()
     
     # copy XEncrypt.dll
     if(BUILD_SHARED_LIBS AND WIN32)
