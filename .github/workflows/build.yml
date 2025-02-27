@@ -1,0 +1,127 @@
+name: build
+on: 
+  push:
+    branches: [ "v1.0" ]
+    paths: 
+      - XEncrypt/**
+      - scripts/**
+      - 1k/**
+      - .github/workflows/build.yml
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install NDK
+        run: |
+          cd ~
+          wget -O NDK -q https://dl.google.com/android/repository/android-ndk-r19c-linux-x86_64.zip
+          sudo apt install unzip -y
+          unzip -q NDK
+          ANDROID_NDK=$(pwd)/android-ndk-r19c
+      - name: Build
+        run: |
+          cd ./scripts
+          sudo apt-get update --fix-missing
+          sudo apt install gcc-multilib
+          sudo chmod +x ./build_android.sh
+          ./build_android.sh
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./XEncrypt/plugin_android/**/*
+          name: plugin_android
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          cd ./scripts
+          sudo chmod +x ./build_linux.sh
+          ./build_linux.sh
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./XEncrypt/plugin_linux/**/*
+          name: plugin_linux
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4.0'
+      - name: Build
+        run: |
+          cd ./scripts
+          chmod +x ./build_ios.sh
+          ./build_ios.sh
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./XEncrypt/plugin_ios/**/*
+          name: plugin_ios
+      
+  tvOS:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4.0'
+      - name: Build
+        run: |
+          cd ./scripts
+          chmod +x ./build_tvos.sh
+          ./build_tvos.sh
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./XEncrypt/plugin_tvos/**/*
+          name: plugin_tvos
+
+  osx:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4.0'
+      - name: Build
+        run: |
+          cd ./scripts
+          chmod +x ./build_osx.sh
+          ./build_osx.sh
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./XEncrypt/plugin_osx/**/*
+          name: plugin_osx
+      
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Insatll MSVC
+        uses: microsoft/setup-msbuild@v1.3
+      
+      - name: Build
+        run: |
+          cd .\scripts
+          .\build_win.bat
+          .\build_uwp.bat
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./XEncrypt/plugin_win/**/*
+          name: plugin_win
+          
+  download-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4
+      - name: Display structure of downloaded files
+        run: ls -R
