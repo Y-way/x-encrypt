@@ -1,20 +1,48 @@
-cmake_minimum_required (VERSION 3.8)
+# A multi-platform support c++11 library with focus on asynchronous socket I/O for any client application.
+#
+# Copyright (c) 2012-2025 Y-Way.
+#
+# Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+# http://opensource.org/licenses/MIT
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+# See the License for the specific language governing permissions and limitations under the License.
 
-# 当前目录:
-# PROJECT_SOURCE_DIR：工程的根目录
-# PROJECT_BINARY_DIR：运行cmake命令的目录，通常为${PROJECT_SOURCE_DIR}/build
-# PROJECT_NAME：返回通过 project 命令定义的项目名称
-# CMAKE_CURRENT_SOURCE_DIR：当前处理的 CMakeLists.txt 所在的路径
-# CMAKE_CURRENT_BINARY_DIR：target 编译目录
-# CMAKE_CURRENT_LIST_DIR：CMakeLists.txt 的完整路径
-# EXECUTABLE_OUTPUT_PATH：重新定义目标二进制可执行文件的存放位置
-# LIBRARY_OUTPUT_PATH：重新定义目标链接库文件的存放位置
+
+cmake_minimum_required(VERSION 3.13.0)
+
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+    set (CMAKE_BUILD_TYPE Debug)
+endif()
+
+cmake_policy(SET CMP0079 NEW)
+cmake_policy(SET CMP0048 NEW)
+
+set(xencrypt_target_name "XEncrypt")
+
+project (${xencrypt_target_name})
+
+set(_1kfetch_cache_dir "../${CMAKE_CURRENT_LIST_DIR}/cache" CACHE STRING "" FORCE)
+set(_1kfetch_manifest "../${CMAKE_CURRENT_LIST_DIR}/manifest.json" CACHE STRING "" FORCE)
+
+include(../1k/platforms.cmake)
+include(../1k/fetch.cmake)
+
+if(APPLE)
+include(../1k/ios.cmake)
+endif()
+
+include(CMakeDependentOption)
+
+set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(SUPPORT_ENCRYPT "Support encrypt data sevice" ON)
 option(SUPPORT_DECRYPT "Support decrypt data sevice" ON)
 
-option(LIB_SUPPORT_ENCRYPT "lib supports encrypt data sevice" ON)
-option(LIB_SUPPORT_DECRYPT "lib supports decrypt data sevice" ON)
+set(XENCRYPT_ROOT ${CMAKE_CURRENT_LIST_DIR})
+
+message(STATUS "XENCRYPT_ROOT=${XENCRYPT_ROOT}")
+message(STATUS "CMAKE_CXX_COMPILER_ID=${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "MSVC=${MSVC}, MSVC_IDE=${MSVC_IDE}")
 
 message(STATUS "PROJECT_SOURCE_DIR:${PROJECT_SOURCE_DIR}")
 message(STATUS "PROJECT_BINARY_DIR:${PROJECT_BINARY_DIR}")
@@ -26,53 +54,130 @@ message(STATUS "CMAKE_CURRENT_LIST_DIR:${CMAKE_CURRENT_LIST_DIR}")
 message(STATUS "SUPPORT_ENCRYPT:${SUPPORT_ENCRYPT}")
 message(STATUS "SUPPORT_DECRYPT:${SUPPORT_DECRYPT}")
 
-# 设置输出目录
-set(OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib/x86_64")
+# 检测平台
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    message(STATUS "Platform: Windows")
+    set(PLATFORM_WINDOWS TRUE)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    message(STATUS "Platform: Linux")
+    set(PLATFORM_LINUX TRUE)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    message(STATUS "Platform: macOS")
+    set(PLATFORM_MACOS TRUE)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Android")
+    message(STATUS "Platform: Android")
+    set(PLATFORM_ANDROID TRUE)
+elseif(CMAKE_SYSTEM_NAME MATCHES "iOS")
+    message(STATUS "Platform: iOS")
+    set(PLATFORM_IOS TRUE)
+endif()
 
-# 设置可执行文件的输出路径：
-# set(EXECUTABLE_OUTPUT_PATH "${OUTPUT_PATH}/bin/")
-# 库lib输出路径：
-# set(LIBRARY_OUTPUT_PATH "${OUTPUT_PATH}/lib/")
-# 拷贝文件到exe所在的目录
-# 1 拷贝文件夹里的文件
-# file(COPY ${OPENCV_DLL_DIR}/ DESTINATION ${EXECUTABLE_OUTPUT_PATH})
-# 2 拷贝bin文件
-# file(COPY ${OPENCV_DLL_DIR} DESTINATION ${EXECUTABLE_OUTPUT_PATH})
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    set(FULL_MSVC TRUE)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(FULL_CLANG TRUE)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(FULL_GCC TRUE)
+endif()
 
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+# --- The C/C++ standard
+if (NOT MSVC)
+    if (NOT CXX_STD)
+        set(CXX_STD 11)
+    endif()
+    set(CMAKE_CXX_STANDARD ${CXX_STD})
+else()
+    if (CXX_STD)
+        set(CMAKE_CXX_STANDARD ${CXX_STD})
+    else()
+        include(CheckCXXCompilerFlag)
+        check_cxx_compiler_flag("/std:c++latest" XENCRYPT_HAVE_CXX_LATEST)
+        if (XENCRYPT_HAVE_CXX_LATEST)
+            set(CXX_STD latest)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
+        else()
+            set(CXX_STD 11)
+        endif()
+    endif()
+endif()
 
-# CMake设置输出目录
-#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_PATH})
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_PATH})
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PATH})
+set (CMAKE_C_STANDARD 99)
+set (CMAKE_C_STANDARD_REQUIRED ON)
 
-# 以上设置VS会自动新建Debug和Release文件夹
-# 以下设置分别设置Debug和Release输出目录
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${OUTPUT_PATH})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${OUTPUT_PATH})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${OUTPUT_PATH})
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${OUTPUT_PATH})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${OUTPUT_PATH})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${OUTPUT_PATH})
+message(STATUS "Building xencrypt with C++${CXX_STD} support")
+message(STATUS "CMAKE_SYSTEM_NAME=" "${CMAKE_SYSTEM_NAME}")
 
-message(STATUS "EXECUTABLE_OUTPUT_PATH:${EXECUTABLE_OUTPUT_PATH}")
-message(STATUS "LIBRARY_OUTPUT_PATH:${EXECUTABLE_OUTPUT_PATH}")
+function(xencrypt_config_target_outdir target)
+    set_target_properties(${target} PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    )
+endfunction()
 
-if(MSVC)
-    #上面两条语句分别设置了Debug版本和Release版本下库文件的后缀名
-    #set(CMAKE_DEBUG_POSTFIX "_d")    set(CMAKE_RELEASE_POSTFIX "_r") 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(LINUX TRUE)
+    if(ANDROID)
+        set(SYSTEM_STRING "Android")
+    else()
+        set(SYSTEM_STRING "Linux")
+    endif()
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(UWP TRUE)
+endif()
+
+# The compiler flags
+if(BUILD_SHARED_LIBS AND LINUX)
+   set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -fPIC")
+endif()
+
+# 设置平台特定的编译选项
+if(PLATFORM_WINDOWS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-
     if (CMAKE_BUILD_TYPE MATCHES Debug)
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
     else()
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MT")
     endif()
     set(CMAKE_DEBUG_POSTFIX "d")
-    # 定义宏
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+
+    if(FULL_GCC)
+        set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
+    else()
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS -DUNICODE -D_UNICODE -D_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
+        remove_definitions(-D_MBCS)
+    endif()
+
+    if (FULL_MSVC)
+        add_compile_options(/Bv /GF)
+    else()
+        add_definitions(-D__STDC_FORMAT_MACROS)
+    endif()
+
+elseif(PLATFORM_LINUX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
+elseif(PLATFORM_MACOS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
+elseif(PLATFORM_ANDROID)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
+elseif(PLATFORM_IOS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
 endif()
+
+# 添加 include 路径
+include_directories(${XENCRYPT_ROOT})
+include_directories("${XENCRYPT_ROOT}/encrypt")
 
 # 添加 include 路径
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -159,58 +264,160 @@ set(XENCRYPT_PRIVATE_SRCS
     encrypt/XContext.cpp
     encrypt/RuntimeApi.cpp)
 
-add_library(XEncrypt SHARED 
-    ${XXHASH_SRCS} 
-    ${XXHASH_HDRS} 
-    ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} 
-    ${ZLIB_PUBLIC_HDRS} 
-    ${ZLIB_PRIVATE_HDRS} 
-    ${XENCRYPT_PUBLIC_HDRS} 
-    ${XENCRYPT_PRIVATE_HDRS} 
-    ${XENCRYPT_PRIVATE_SRCS})
-
-add_library(libXEncrypt STATIC 
+set(XENCRYPT_SOURCES
     ${XXHASH_SRCS} 
     ${XXHASH_HDRS}
     ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS}
     ${ZLIB_PRIVATE_HDRS}
     ${XENCRYPT_PUBLIC_HDRS}
     ${XENCRYPT_PRIVATE_HDRS} 
-    ${XENCRYPT_PRIVATE_SRCS} )
+    ${XENCRYPT_PRIVATE_SRCS})
 
-set_target_properties(XEncrypt PROPERTIES DEFINE_SYMBOL XENCRYPT_EXPORT_API)
+set(XENCRYPT_INC_DIRS
+    ${XENCRYPT_ROOT}
+    "${XENCRYPT_ROOT}/encrypt"
+    )
+
+# add_library(XEncrypt SHARED 
+#     ${XXHASH_SRCS} 
+#     ${XXHASH_HDRS} 
+#     ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} 
+#     ${ZLIB_PRIVATE_HDRS} 
+#     ${XENCRYPT_PUBLIC_HDRS} 
+#     ${XENCRYPT_PRIVATE_HDRS} 
+#     ${XENCRYPT_PRIVATE_SRCS})
+
+# add_library(libXEncrypt STATIC 
+#     ${XXHASH_SRCS} 
+#     ${XXHASH_HDRS}
+#     ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS}
+#     ${ZLIB_PRIVATE_HDRS}
+#     ${XENCRYPT_PUBLIC_HDRS}
+#     ${XENCRYPT_PRIVATE_HDRS} 
+#     ${XENCRYPT_PRIVATE_SRCS})
+        
+macro(source_group_by_dir proj_dir source_files)
+if(MSVC OR APPLE)
+    get_filename_component(sgbd_cur_dir ${proj_dir} ABSOLUTE)
+    foreach(sgbd_file ${${source_files}})
+        get_filename_component(sgbd_abs_file ${sgbd_file} ABSOLUTE)
+        file(RELATIVE_PATH sgbd_fpath ${sgbd_cur_dir} ${sgbd_abs_file})
+        string(REGEX REPLACE "\(.*\)/.*" \\1 sgbd_group_name ${sgbd_fpath})
+        string(COMPARE EQUAL ${sgbd_fpath} ${sgbd_group_name} sgbd_nogroup)
+        string(REPLACE "/" "\\" sgbd_group_name ${sgbd_group_name})
+        if(sgbd_nogroup)
+            set(sgbd_group_name "\\")
+        endif(sgbd_nogroup)
+        source_group(${sgbd_group_name} FILES ${sgbd_file})
+    endforeach(sgbd_file)
+endif(MSVC OR APPLE)
+endmacro(source_group_by_dir)
+
+source_group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} XENCRYPT_SOURCES)
+
+
+# set_target_properties(XEncrypt PROPERTIES SOVERSION 1)
+
+# --- add yasio core lib project
+if (APPLE)
+    if (IOS)
+        # set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
+        add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
+    else ()
+        # set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_64_BIT)")
+        if (BUILD_SHARED_LIBS)
+            add_library(${xencrypt_target_name} MODULE ${XENCRYPT_SOURCES})
+            set_target_properties (${xencrypt_target_name} PROPERTIES BUNDLE TRUE )
+        else()
+            add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
+        endif()
+    endif ()
+elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Switch")
+    add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
+    target_compile_options(${xencrypt_target_name} PRIVATE -m64 -mcpu=cortex-a57+fp+simd+crypto+crc -fno-common -fno-short-enums -ffunction-sections -fdata-sections -fPIC -fms-extensions)
+else ( ) # linux/win32/android
+    add_library(${xencrypt_target_name} ${XENCRYPT_SOURCES})
+endif ( )
+
+target_link_libraries(${xencrypt_target_name} ${XENCRYPT_EXTERN_LIBS})
+
+message(STATUS "XENCRYPT_INC_DIRS=${XENCRYPT_INC_DIRS}")
+target_include_directories(${xencrypt_target_name} PUBLIC ${XENCRYPT_INC_DIRS})
+
+set(XENCRYPT_SERVICE "")
 
 if(SUPPORT_ENCRYPT)
-    target_compile_definitions(XEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
-    if(LIB_SUPPORT_ENCRYPT)
-        target_compile_definitions(libXEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
-    endif()
+    set(XENCRYPT_SERVICE ${XENCRYPT_SERVICE} XEF_ENCRYPT_SERVICE)
 endif()
 
 if(SUPPORT_DECRYPT)
-    target_compile_definitions(XEncrypt PUBLIC XEF_DECRYPT_SERVICE)
-    if(LIB_SUPPORT_DECRYPT)
-        target_compile_definitions(libXEncrypt PUBLIC XEF_DECRYPT_SERVICE)
+    set(XENCRYPT_SERVICE ${XENCRYPT_SERVICE} XEF_DECRYPT_SERVICE)
+endif()
+
+message(STATUS "XENCRYPT_SERVICE=${XENCRYPT_SERVICE}")
+
+if (BUILD_SHARED_LIBS)
+    target_compile_definitions(${xencrypt_target_name} PUBLIC  XENCRYPT_EXPORT_API ${XENCRYPT_SERVICE})
+else()
+    target_compile_definitions(${xencrypt_target_name} PUBLIC  XENCRYPT_IMPORT_API ${XENCRYPT_SERVICE})
+endif()
+
+macro(xencrypt_config_lib_depends target_name)
+    target_link_libraries(${target_name} ${xencrypt_target_name})
+    if ((NOT WIN32) AND (NOT ANDROID))
+        target_link_libraries(${target_name} pthread)
     endif()
-endif()
+    
+    # copy XEncrypt.dll
+    if(BUILD_SHARED_LIBS AND WIN32)
+        add_custom_command(TARGET ${target_name} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CMAKE_BINARY_DIR}/\$\(Configuration\)/XEncrypt.dll"
+                $<TARGET_FILE_DIR:${target_name}>
+            )
+    endif()
+endmacro()
 
-set_target_properties(XEncrypt PROPERTIES SOVERSION 1)
+macro(xencrypt_config_app_folder target_name)
+    set_target_properties(${target_name} PROPERTIES 
+        FOLDER "apps")
+endmacro()
 
-# 将源代码添加到此项目的可执行文件。
-# 可执行文件名，通过指定的源文件列表构建出可执行目标文件：
-add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
-# 设置链接库名称：
-target_link_libraries(CXEncrypt libXEncrypt)
+macro(encrypt_config_app_depends target_name)
+    xencrypt_config_lib_depends(${target_name})
+    xencrypt_config_app_folder(${target_name})
+endmacro(encrypt_config_app_depends)
 
-set_target_properties(CXEncrypt
-    PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-)
+# The yasio config preprocessors
+macro(encrypt_config_pred target_name pred)
+    if(${pred})
+        target_compile_definitions(${target_name} PUBLIC ${pred}=1)
+    endif()
+endmacro()
 
-#设置了Debug版本和Release版本下可执行文件的后缀名
-#set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "_d")     set_target_properties(${TARGET_NAME} PROPERTIES RELEASE_POSTFIX "_r")
+macro(encrypt_config_option target_name optname optval)
+    if(${optname})
+        target_compile_definitions(${target_name} PUBLIC ${optname}=${optval})
+    endif()
+endmacro()
 
+macro (encrypt_config_lib_options target_name)
+    xencrypt_config_target_outdir(${xencrypt_target_name})
+endmacro()
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET CXEncrypt PROPERTY CXX_STANDARD 14)
-endif()
+encrypt_config_lib_options(${xencrypt_target_name})
+
+### Sets startup project for vs .sln
+if (WIN32 AND XENCRYPT_BUILD_TESTS)
+    add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
+    target_link_libraries(CXEncrypt libXEncrypt)
+
+    set_target_properties(CXEncrypt
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
+    )
+
+    if (CMAKE_VERSION VERSION_GREATER 3.12)
+        set_property(TARGET CXEncrypt PROPERTY CXX_STANDARD 14)
+    endif()    
+endif ()
