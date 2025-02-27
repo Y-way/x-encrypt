@@ -78,7 +78,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          path: ./XEncrypt/build_tvos/**/*
+          path: ./XEncrypt/plugin_tvos/**/*
           name: plugin_tvos
 
   osx:
