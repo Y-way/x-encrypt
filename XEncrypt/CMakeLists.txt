@@ -27,6 +27,10 @@ set(_1kfetch_manifest "../${CMAKE_CURRENT_LIST_DIR}/manifest.json" CACHE STRING 
 include(../1k/platforms.cmake)
 include(../1k/fetch.cmake)
 
+if(APPLE)
+include(../1k/ios.cmake)
+endif()
+
 include(CMakeDependentOption)
 
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
