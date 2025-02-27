@@ -2,7 +2,7 @@
 
 #include <string>
 #include "config.h"
-namespace encrypt
+namespace xencrypt
 {
 	class XENCRYPT_API ZipUtils
 	{

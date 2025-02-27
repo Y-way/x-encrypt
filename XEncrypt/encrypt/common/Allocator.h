@@ -22,7 +22,7 @@ namespace XMemory
     extern XMemoryCallbacks DefaultCallbacks;
 }
 
-namespace encrypt
+namespace xencrypt
 {
     struct XENCRYPT_API MemoryAllocator
     {
@@ -36,21 +36,21 @@ namespace encrypt
         static void* Realloc(void* memory, size_t newSize);
         static void* AlignedRealloc(void* memory, size_t newSize, size_t alignment);
     };
-} /* namespace encrypt */
+} /* namespace xencrypt */
 
-#define XMEMORY_MALLOC(size) encrypt::MemoryAllocator::Malloc(size)
-#define XMEMORY_MALLOC_ALIGNED(size, alignment) encrypt::MemoryAllocator::AlignedMalloc(size, alignment)
-#define XMEMORY_MALLOC_ZERO(size) encrypt::MemoryAllocator::Calloc(1,size)
-#define XMEMORY_FREE(memory) encrypt::MemoryAllocator::Free(memory)
-#define XMEMORY_FREE_ALIGNED(memory) encrypt::MemoryAllocator::AlignedFree(memory)
-#define XMEMORY_CALLOC(count, size) encrypt::MemoryAllocator::Calloc(count,size)
-#define XMEMORY_REALLOC(memory, newSize) encrypt::MemoryAllocator::Realloc(memory,newSize)
-#define XMEMORY_REALLOC_ALIGNED(memory, newSize, alignment) encrypt::MemoryAllocator::AlignedRealloc(memory, newSize, alignment)
+#define XMEMORY_MALLOC(size) xencrypt::MemoryAllocator::Malloc(size)
+#define XMEMORY_MALLOC_ALIGNED(size, alignment) xencrypt::MemoryAllocator::AlignedMalloc(size, alignment)
+#define XMEMORY_MALLOC_ZERO(size) xencrypt::MemoryAllocator::Calloc(1,size)
+#define XMEMORY_FREE(memory) xencrypt::MemoryAllocator::Free(memory)
+#define XMEMORY_FREE_ALIGNED(memory) xencrypt::MemoryAllocator::AlignedFree(memory)
+#define XMEMORY_CALLOC(count, size) xencrypt::MemoryAllocator::Calloc(count,size)
+#define XMEMORY_REALLOC(memory, newSize) xencrypt::MemoryAllocator::Realloc(memory,newSize)
+#define XMEMORY_REALLOC_ALIGNED(memory, newSize, alignment) xencrypt::MemoryAllocator::AlignedRealloc(memory, newSize, alignment)
 
 #define XMEMORY_SAFE_FREE(memory) \
 {\
     void* pMem = (void*)(memory); \
     if(pMem != nullptr) \
-        encrypt::MemoryAllocator::Free(pMem); \
+        xencrypt::MemoryAllocator::Free(pMem); \
     pMem = nullptr; \
 }

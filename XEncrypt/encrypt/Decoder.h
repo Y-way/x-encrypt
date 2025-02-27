@@ -2,7 +2,7 @@
 
 #include "XContext.h"
 
-namespace encrypt
+namespace xencrypt
 {
     /// <summary>
     /// 解密器接口

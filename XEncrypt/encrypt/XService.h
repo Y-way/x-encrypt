@@ -7,7 +7,7 @@
 #include "Encoder.h"
 #include "XContext.h"
 
-namespace encrypt
+namespace xencrypt
 {
 
     class XENCRYPT_API XService

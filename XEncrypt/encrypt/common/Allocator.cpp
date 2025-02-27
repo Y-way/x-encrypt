@@ -21,7 +21,7 @@ static void* aligned_alloc(size_t alignment, size_t size)
 #include <AvailabilityMacros.h>
 #endif
 
-static void* aligned_alloc(size_t alignment, size_t size)
+void* aligned_alloc(size_t alignment, size_t size)
 {
     // Unfortunately, aligned_alloc causes VMA to crash due to it returning null pointers. (At least under 11.4)
     // Therefore, for now disable this specific exception until a proper solution is found.
@@ -38,16 +38,33 @@ static void* aligned_alloc(size_t alignment, size_t size)
     //#endif
     //#endif
 
-    // alignment must be >= sizeof(void*)
-    if(alignment < sizeof(void*))
-    {
+    // 处理 size 为 0 的边界条件
+    if (size == 0) {
+        return NULL;
+    }
+
+    // 确保 alignment 不小于 sizeof(void*)
+    if (alignment < sizeof(void*)) {
         alignment = sizeof(void*);
     }
 
-    void *pointer;
-    if(posix_memalign(&pointer, alignment, size) == 0)
-        return pointer;
-    return NULL;
+    // 检查 alignment 是否为 2 的幂次方
+    if ((alignment & (alignment - 1)) != 0) {
+        return NULL;
+    }
+
+    // iOS/MacOS 版本兼容方案
+    #if defined(__APPLE__)
+        if (__builtin_available(macOS 10.15, iOS 13.0, *)) {
+            return ::aligned_alloc(alignment, size); // 调用系统实现
+        } else {
+            void* pointer;
+            return (posix_memalign(&pointer, alignment, size) == 0) ? pointer : NULL;
+        }
+    #else
+        void* pointer;
+        return (posix_memalign(&pointer, alignment, size) == 0) ? pointer : NULL;
+    #endif
 }
 #endif
 
@@ -72,7 +89,17 @@ static void native_aligned_free(void* ptr)
 
 static void* native_aligned_alloc(size_t alignment, size_t size)
 {
-    return aligned_alloc(alignment, size);
+    // iOS/MacOS 版本兼容方案
+    #if defined(__APPLE__)
+        if (__builtin_available(macOS 10.15, iOS 13.0, *)) {
+            return ::aligned_alloc(alignment, size); // 调用系统实现
+        } else {
+            return aligned_alloc(alignment, size);
+        }
+    #else
+        return aligned_alloc(alignment, size);
+    #endif
+    
 }
 
 static void* native_aligned_realloc(void* memory, size_t newSize, size_t alignment)
@@ -125,7 +152,7 @@ namespace XMemory
     };
 }
 
-namespace encrypt
+namespace xencrypt
 {
     static XMemory::XMemoryCallbacks s_Callbacks = XMemory::DefaultCallbacks;
 
@@ -168,4 +195,4 @@ namespace encrypt
     {
         return s_Callbacks.aligned_realloc_func(memory, newSize, alignment);
     }
-} /* namespace encrypt */
+} /* namespace xencrypt */

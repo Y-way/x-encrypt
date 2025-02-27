@@ -4,7 +4,7 @@
 #include "config.h"
 #include "Encoder.h"
 
-namespace encrypt
+namespace xencrypt
 {
 	/// <summary>
 	/// XEF格式加密器

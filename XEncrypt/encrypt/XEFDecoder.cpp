@@ -5,7 +5,7 @@
 #include "common/ZipUtils.h"
 #include "common/Common.h"
 
-namespace encrypt
+namespace xencrypt
 {
     namespace
     {

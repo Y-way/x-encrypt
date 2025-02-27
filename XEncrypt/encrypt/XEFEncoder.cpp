@@ -5,7 +5,7 @@
 #include "common/ZipUtils.h"
 #include "common/Common.h"
 
-namespace encrypt
+namespace xencrypt
 {
     void XEFEncoder::Encode(XContext* context, uint8_t encryptSize, XEncodeType type)
     {

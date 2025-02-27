@@ -5,7 +5,7 @@
 #include "common/Common.h"
 #include "XEFEncoder.h"
 
-namespace encrypt
+namespace xencrypt
 {
     static XService* s_instance = nullptr;
 

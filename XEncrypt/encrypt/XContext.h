@@ -3,7 +3,7 @@
 #include "config.h"
 #include "common/Common.h"
 
-namespace encrypt
+namespace xencrypt
 {
 
     class XENCRYPT_API XContext

@@ -1,6 +1,6 @@
 ﻿#include "XContext.h"
 #include "common/Allocator.h"
-namespace encrypt
+namespace xencrypt
 {
     XContext::XContext(XContextType type)
         :_type(type), _clone(false), _data(nullptr), _input(nullptr)

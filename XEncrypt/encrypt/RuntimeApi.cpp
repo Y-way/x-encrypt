@@ -4,7 +4,7 @@
 #include "XContext.h"
 #include "XEFDecoder.h"
 
-using namespace encrypt;
+using namespace xencrypt;
 
 void decrypt_service_initialize()
 {

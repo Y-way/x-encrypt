@@ -11,7 +11,7 @@
 #include "encrypt/RuntimeApi.h"
 
 using namespace std;
-using namespace encrypt;
+using namespace xencrypt;
 
 const byte rawData[] = { 'T','h','i','s',' ','a',' ','t','e','s','t',' ','d', 'a', 't', 'a', '\0', };
 int64_t length = sizeof(rawData);

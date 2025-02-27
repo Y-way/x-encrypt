@@ -2,7 +2,7 @@
 
 #include "config.h"
 
-namespace encrypt
+namespace xencrypt
 {
     typedef void (*XLogCallback)(const char*);
 

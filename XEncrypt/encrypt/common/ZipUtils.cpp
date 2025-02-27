@@ -7,7 +7,7 @@
 #include <string.h>
 #include <memory>
 
-namespace encrypt
+namespace xencrypt
 {
 #define BUFFER_INC_FACTOR (2)
 
