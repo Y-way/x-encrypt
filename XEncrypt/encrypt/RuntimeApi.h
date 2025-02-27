@@ -7,7 +7,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-#define EXPORT_API(r, n, p)             X_ENCRYPT_EXPORT r n p;
+#define EXPORT_API(r, n, p)             XENCRYPT_API r n p;
     /// <summary>
     /// 初始化服务
     /// </summary>
