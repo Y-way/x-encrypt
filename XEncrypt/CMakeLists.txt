@@ -34,17 +34,6 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 option(SUPPORT_ENCRYPT "Support encrypt data sevice" ON)
 option(SUPPORT_DECRYPT "Support decrypt data sevice" ON)
 
-option(LIB_SUPPORT_ENCRYPT "lib supports encrypt data sevice" ON)
-option(LIB_SUPPORT_DECRYPT "lib supports decrypt data sevice" ON)
-
-if(LIB_SUPPORT_ENCRYPT)
-    set(SUPPORT_ENCRYPT ON)
-endif()
-
-if(LIB_SUPPORT_DECRYPT)
-    set(SUPPORT_DECRYPT ON)
-endif()
-
 set(XENCRYPT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 message(STATUS "XENCRYPT_ROOT=${XENCRYPT_ROOT}")
@@ -364,20 +353,6 @@ target_link_libraries(${xencrypt_target_name} ${XENCRYPT_EXTERN_LIBS})
 
 message(STATUS "XENCRYPT_INC_DIRS=${XENCRYPT_INC_DIRS}")
 target_include_directories(${xencrypt_target_name} PUBLIC ${XENCRYPT_INC_DIRS})
-
-# if(SUPPORT_ENCRYPT)
-#     target_compile_definitions(XEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
-#     if(LIB_SUPPORT_ENCRYPT)
-#         target_compile_definitions(libXEncrypt PUBLIC XEF_ENCRYPT_SERVICE)
-#     endif()
-# endif()
-
-# if(SUPPORT_DECRYPT)
-#     target_compile_definitions(XEncrypt PUBLIC XEF_DECRYPT_SERVICE)
-#     if(LIB_SUPPORT_DECRYPT)
-#         target_compile_definitions(libXEncrypt PUBLIC XEF_DECRYPT_SERVICE)
-#     endif()
-# endif()
 
 set(XENCRYPT_SERVICE "")
 
