@@ -166,6 +166,9 @@ elseif(PLATFORM_ANDROID)
 elseif(PLATFORM_IOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     add_definitions(-DZ_HAVE_UNISTD_H)
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    add_definitions(-DZ_HAVE_UNISTD_H)
 endif()
 
 # 添加 include 路径
