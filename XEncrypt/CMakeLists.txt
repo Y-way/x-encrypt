@@ -288,30 +288,6 @@ set(XENCRYPT_INC_DIRS
     ${XENCRYPT_ROOT}
     "${XENCRYPT_ROOT}/encrypt"
     )
-
-# add_library(libXEncrypt STATIC 
-#     ${XXHASH_SRCS} 
-#     ${XXHASH_HDRS}
-#     ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS}
-#     ${ZLIB_PRIVATE_HDRS}
-#     ${XENCRYPT_PUBLIC_HDRS}
-#     ${XENCRYPT_PRIVATE_HDRS} 
-#     ${XENCRYPT_PRIVATE_SRCS}
-#     ${XENCRYPT_PLGUIN_XEF_HDRS}
-#     ${XENCRYPT_PLGUIN_XEF_SRCS})
-
-# add_library(XEncrypt SHARED 
-#         ${XXHASH_SRCS} 
-#         ${XXHASH_HDRS} 
-#         ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} 
-#         ${ZLIB_PUBLIC_HDRS} 
-#         ${ZLIB_PRIVATE_HDRS} 
-#         ${XENCRYPT_PUBLIC_HDRS} 
-#         ${XENCRYPT_PRIVATE_HDRS} 
-#         ${XENCRYPT_PRIVATE_SRCS}
-#         ${XENCRYPT_PLGUIN_XEF_HDRS}
-#         ${XENCRYPT_PLGUIN_XEF_SRCS})
-
         
 macro(source_group_by_dir proj_dir source_files)
 if(MSVC OR APPLE)
@@ -343,8 +319,12 @@ if (APPLE)
     else ()
         # set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_64_BIT)")
         if (BUILD_SHARED_LIBS)
-            add_library(${xencrypt_target_name} MODULE ${XENCRYPT_SOURCES})
-            set_target_properties (${xencrypt_target_name} PROPERTIES BUNDLE TRUE )
+            message(STATUS "ARCHS=${ARCHS}")
+            add_library(${xencrypt_target_name} SHARED ${XENCRYPT_SOURCES})
+            set_target_properties(${xencrypt_target_name} PROPERTIES
+                MACOSX_RPATH ON
+                XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
+                XCODE_ATTRIBUTE_ARCHS "${ARCHS}")
         else()
             add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
         endif()
@@ -381,9 +361,9 @@ endif()
 
 macro(xencrypt_config_lib_depends target_name)
     target_link_libraries(${target_name} ${xencrypt_target_name})
-    if ((NOT WIN32) AND (NOT ANDROID))
-        target_link_libraries(${target_name} pthread)
-    endif()
+    # if ((NOT WIN32) AND (NOT ANDROID))
+    #     target_link_libraries(${target_name} pthread)
+    # endif()
     
     # copy XEncrypt.dll
     if(BUILD_SHARED_LIBS AND WIN32)
@@ -419,14 +399,6 @@ macro(encrypt_config_option target_name optname optval)
 endmacro()
 
 macro (encrypt_config_lib_options target_name)
-
-    # if(SUPPORT_ENCRYPT)
-    #     encrypt_config_pred(${target_name} XEF_ENCRYPT_SERVICE)
-    # endif()
-    # if(SUPPORT_DECRYPT)
-    #     encrypt_config_pred(${target_name} XEF_DECRYPT_SERVICE)
-    # endif()
-
     xencrypt_config_target_outdir(${xencrypt_target_name})
 endmacro()
 
