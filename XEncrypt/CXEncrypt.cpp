@@ -82,7 +82,7 @@ int main()
 
     {
         //C API
-        void* plugin = xefencrypt_plugin_create(XEncodeType::XGZip, 32);
+        void* plugin = xef_plugin_create(XEncodeType::XGZip, 32);
         //start service
         void* service = xencrypt_service_initialize(plugin);
 
@@ -134,7 +134,7 @@ int main()
         //stop service
         xencrypt_service_deinitialize(service);
 
-        xefencrypt_plugin_destroy(plugin);
+        xef_plugin_destroy(plugin);
     }
     getchar();
 }
