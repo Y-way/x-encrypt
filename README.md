@@ -20,9 +20,8 @@ cmake --build build --config Debug
 ```
 
 ## 快速开始
-
-    // CXEncrypt.cpp: 定义应用程序的入口点。
-//
+```cpp
+// CXEncrypt.cpp: 定义应用程序的入口点。
 
 #include "iostream"
 #include "CXEncrypt.h"
@@ -163,7 +162,7 @@ int main()
     }
     getchar();
 }
-
+```
 ## 扩展自定义加密/解密器.
     1)实现'XPlugin'插件接口类
     2)实现'Encoder'编码接口类,用于支持数据加密
