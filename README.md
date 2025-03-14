@@ -75,7 +75,7 @@ int main()
         service->ReleaseResult(result);
         result = nullptr;
         //Decrypting data
-        if(!service->IsEncrypted(encryptedData, length))
+        if(!service->IsEncrypted(encryptedData, encryptedDataLength))
         {
             cout<<"data dose not have been encrypted."<<endl;
         }
