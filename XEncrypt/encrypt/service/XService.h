@@ -6,7 +6,7 @@
 namespace xencrypt
 {
 	/// @brief 加密/解密服务类
-	class XENCRYPT_API XService
+	class XENCRYPT_API XService final
 	{
     public:
         XService(XPlugin* plugin) :_plugin(plugin) {}

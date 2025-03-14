@@ -226,11 +226,9 @@ set(ZLIB_SRCS
 )
 
 set(XENCRYPT_PUBLIC_HDRS
-    encrypt/api_types.h
     encrypt/config.h
     encrypt/config_api.h
-    encrypt/config_api_platforms.h
-    encrypt/config_platforms.h
+    encrypt/platforms.h
     encrypt/RuntimeApi.h)
 
 set(XENCRYPT_PRIVATE_HDRS
@@ -254,11 +252,6 @@ set(XENCRYPT_PRIVATE_SRCS
     encrypt/service/XService.cpp
     encrypt/service/XResult.cpp
     encrypt/service/XContext.cpp
-    encrypt/api_types.h
-    encrypt/config.h
-    encrypt/config_api.h
-    encrypt/config_api_platforms.h
-    encrypt/config_platforms.h
     encrypt/RuntimeApi.cpp)
 
 set(XENCRYPT_PLGUIN_XEF_HDRS

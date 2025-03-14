@@ -6,7 +6,7 @@
 
 namespace xencrypt
 {
-    class XENCRYPT_API XResult X_ENCRYPT_FINAL
+    class XENCRYPT_API XResult final
     {
     public:
         XResult() = default;

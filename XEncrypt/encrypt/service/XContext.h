@@ -7,7 +7,7 @@ namespace xencrypt
 {
     class XENCRYPT_API XService;
     /// @brief 加密/解密上下文
-    class XENCRYPT_API XContext
+    class XENCRYPT_API XContext final
     {
     public:
         XContext(XContextType type, XService* service);

@@ -1,8 +1,6 @@
 ﻿#pragma once
 
-#include "config_platforms.h"
-#include "config_api_platforms.h"
-#include "api_types.h"
+#include "platforms.h"
 
 #if X_ENCRYPT_TARGET_ARMV7
 // On ARMv7 with Thumb instructions the lowest bit is always set.
@@ -28,4 +26,34 @@
 #define REAL_NORETURN __attribute__ ((noreturn))
 #else
 #define REAL_NORETURN NORETURN
+#endif
+
+#if !defined(X_ENCRYPT_EXPORT)
+#ifdef _MSC_VER
+# include <malloc.h>
+# define X_ENCRYPT_EXPORT __declspec(dllexport)
+#elif X_ENCRYPT_TARGET_PSP2 || X_ENCRYPT_TARGET_PS4
+# define X_ENCRYPT_EXPORT __declspec(dllexport)
+#else
+# define X_ENCRYPT_EXPORT __attribute__ ((visibility ("default")))
+#endif
+#endif
+
+#if !defined(X_ENCRYPT_IMPORT)
+#ifdef _MSC_VER
+# include <malloc.h>
+# define X_ENCRYPT_IMPORT __declspec(dllimport)
+#elif X_ENCRYPT_TARGET_PSP2 || X_ENCRYPT_TARGET_PS4
+# define X_ENCRYPT_IMPORT __declspec(dllimport)
+#else
+# define X_ENCRYPT_IMPORT
+#endif
+#endif
+
+#ifdef XENCRYPT_EXPORT_API
+# define XENCRYPT_API X_ENCRYPT_EXPORT
+#elif XENCRYPT_IMPORT_API
+# define XENCRYPT_API X_ENCRYPT_IMPORT
+#else
+# define XENCRYPT_API
 #endif
