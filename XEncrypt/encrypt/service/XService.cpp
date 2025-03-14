@@ -1,116 +1,73 @@
-﻿#include "common/Allocator.h"
-#include "common/Logging.h"
+﻿#include "Common.h"
+#include "common/Allocator.h"
 #include "XService.h"
-#include "Common.h"
+#include "XContext.h"
 
 namespace xencrypt
 {
-    static XService* s_instance = nullptr;
-
-    XService::~XService()
+    bool XService::IsEncrypted(const byte* data, int64_t size)
     {
+        X_ENCRYPT_ASSERT(_plugin != nullptr);
+        return _plugin->IsEncrypted(data, size);
     }
 
-    void XService::Initialize(XEncryptPlugin* plugin)
+    XResult* XService::Decrypt(const byte* input, int64_t length, bool cloneInput /*= false*/)
     {
-        if (s_instance == nullptr)
+        XResult* pResult = new XResult();
+        X_ENCRYPT_ASSERT(pResult != nullptr);
+        
+        if (_plugin == nullptr)
         {
-            s_instance = new XService(plugin);
+            pResult->SetResultCode(ResultCode::InvalidPlugin);
+            return pResult;
         }
-    }
+        
+        XContext* context = new XContext(XContextType::XDecrypt, this);
+        X_ENCRYPT_ASSERT(context != nullptr);
+        pResult->SetContext(context);
 
-    XEncryptPlugin* XService::RegisterPlugin(XEncryptPlugin* plugin)
-    {
-        if (s_instance == nullptr)
+        if (!_plugin->IsSupport(context->GetType()))
         {
-            Logging::Write("The service instance dose not create.");
-            return nullptr;
-        }
-        XEncryptPlugin* oldPlugin = s_instance->_plugin;
-        s_instance->_plugin = plugin;
-        return oldPlugin;
-    }
-
-    void XService::UnInitialize()
-    {
-        if (s_instance != nullptr)
-        {
-            delete s_instance;
-            s_instance = nullptr;
-        }
-    }
-
-    ResultCode XService::Decrypt(XContext* context, const byte* input, int64_t length, bool cloneInput /*= false*/)
-    {
-        if (s_instance == nullptr)
-        {
-            return ResultCode::UnInitialize;
-        }
-        if (context == nullptr)
-        {
-            return ResultCode::InvalidXContext;
-        }
-        if (s_instance->_plugin == nullptr)
-        {
-            return ResultCode::InvalidPlugin;
-        }
-        if (!s_instance->_plugin->IsSupport(context->GetType()))
-        {
+            pResult->SetResultCode(ResultCode::InvalidDecoder);
             context->SetResultCode(ResultCode::InvalidDecoder);
         }
         else
         {
             context->SetCloneInputDataFlag(cloneInput);
             context->SetInputData(input, length);
-            s_instance->_plugin->Decrypt(context);
+            _plugin->Decrypt(context);
         }
-        return context->GetResultCode();
+        
+        pResult->SetResultCode(context->GetResultCode());
+
+        return pResult;
     }
 
-    ResultCode XService::Encrypt(XContext* context, const byte* in, int64_t length)
+    XResult* XService::Encrypt(const byte* in, int64_t length)
     {
-        if (s_instance == nullptr)
+        XResult* pResult = new XResult();
+        X_ENCRYPT_ASSERT(pResult != nullptr);
+        if (_plugin == nullptr)
         {
-            return ResultCode::UnInitialize;
+            pResult->SetResultCode(ResultCode::InvalidPlugin);
+            return pResult;
         }
-        if (context == nullptr)
+
+        XContext* context = new XContext(XContextType::XEncrypt, this);
+        X_ENCRYPT_ASSERT(context != nullptr);
+        pResult->SetContext(context);
+
+        if (!_plugin->IsSupport(XContextType::XEncrypt))
         {
-            return ResultCode::InvalidXContext;
-        }
-        if (s_instance->_plugin == nullptr)
-        {
-            return ResultCode::InvalidPlugin;
-        }
-        if (!s_instance->_plugin->IsSupport(context->GetType()))
-        {
+            pResult->SetResultCode(ResultCode::InvalidEncoder);
             context->SetResultCode(ResultCode::InvalidEncoder);
         }
         else
         {
             context->SetInputData(in, length);
-            s_instance->_plugin->Encrypt(context);
+            _plugin->Encrypt(context);
         }
-        return context->GetResultCode();
-    }
-
-    XContext* XService::CreateContext(XContextType type)
-    {
-        XContext* result = new XContext(type);
-        if (result == nullptr)
-        {
-            Logging::Write("Out memory.");
-            return nullptr;
-        }
-        return result;
-    }
-
-    void XService::ReleaseContext(XContext* context)
-    {
-        if (context == nullptr)
-        {
-            return;
-        }
-        delete context;
-        context = nullptr;
+        pResult->SetResultCode(context->GetResultCode());
+        return pResult;
     }
 }

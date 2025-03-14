@@ -1,9 +1,11 @@
-﻿#include "XEFEncryptPlugin.h"
+﻿#include "XEFPlugin.h"
 #include "XEFHeader.h"
 #include "common/Logging.h"
+#include "XEFEncoder.h"
+#include "XEFDecoder.h"
 namespace xencrypt
 {
-    XEFEncryptPlugin::XEFEncryptPlugin(XEncodeType type, uint8_t encryptSize)
+    XEFPlugin::XEFPlugin(XEncodeType type, uint8_t encryptSize)
     {
 #if XEF_ENCRYPT_SERVICE
         _encoder = new XEFEncoder(type, encryptSize);
@@ -14,7 +16,7 @@ namespace xencrypt
 #endif // XEF_DECRYPT_SERVICE
     }
 
-    XEFEncryptPlugin::~XEFEncryptPlugin()
+    XEFPlugin::~XEFPlugin()
     {
 #if XEF_ENCRYPT_SERVICE
         delete _encoder;
@@ -27,7 +29,7 @@ namespace xencrypt
 #endif // XEF_DECRYPT_SERVICE
     }
     
-    bool XEFEncryptPlugin::IsEncrypted(const byte* data, int64_t size)
+    bool XEFPlugin::IsEncrypted(const byte* data, int64_t size)
     {
         if (data == nullptr || size < sizeof(XEFHeader))
         {
@@ -40,7 +42,7 @@ namespace xencrypt
         return ret;
     }
 
-    void XEFEncryptPlugin::Encrypt(XContext* context)
+    void XEFPlugin::Encrypt(XContext* context)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
         if (_encoder == nullptr)
@@ -51,7 +53,7 @@ namespace xencrypt
         _encoder->Encode(context);
     }
 
-    void XEFEncryptPlugin::Decrypt(XContext* context)
+    void XEFPlugin::Decrypt(XContext* context)
     {
         X_ENCRYPT_ASSERT(context != nullptr);
         if (_decoder == nullptr)

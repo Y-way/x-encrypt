@@ -5,12 +5,18 @@
 
 namespace xencrypt
 {
+    class XENCRYPT_API XService;
     /// @brief 加密/解密上下文
     class XENCRYPT_API XContext
     {
     public:
-        XContext(XContextType type);
+        XContext(XContextType type, XService* service);
         ~XContext();
+
+        XContext(const XContext&) = delete;
+        XContext& operator=(const XContext&) = delete;
+        XContext(XContext&&) = delete;
+
         /// @brief 获取上下文类型
         /// @return 上下文类型
         XContextType GetType() const { return _type; }
@@ -42,6 +48,12 @@ namespace xencrypt
             _input = data;
             _inputLength = length;
         }
+        /// @brief 检查数据是否已加密
+        /// @param data 内存数据地址
+        /// @param size 数据长度
+        /// @return 数据是否已加密.返回true,数据已加密,否则,未加密.
+        bool IsEncrypted(const byte* data, int64_t size);
+
         /// @brief 获取源数据
         /// @return 源数据地址
         const byte* GetInputData() const { return _input;}
@@ -69,11 +81,13 @@ namespace xencrypt
         XContextType _type;
         ResultCode _code;
         XCodeMemoryType _memoryType;
+        XService* _service;
         byte* _data;
         int64_t _length;
         const byte* _input;
         int64_t _inputLength;
         bool _clone;
+
     };
 
 }

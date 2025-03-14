@@ -1,44 +1,61 @@
 ﻿#include "RuntimeApi.h"
 #include "service/XService.h"
 #include "service/XContext.h"
+#include "service/XResult.h"
 
 using namespace xencrypt;
 
-void xencrypt_service_initialize(void* plugin)
+void* xencrypt_service_initialize(void* plugin)
 {
-    XService::Initialize(reinterpret_cast<XEncryptPlugin*>(plugin));
+    return (void*)(new XService(reinterpret_cast<XPlugin*>(plugin)));
 }
 
-void xencrypt_service_deinitialize()
+bool xencrypt_service_is_encrypted(void* service, const byte* data, int64_t size)
 {
-    XService::UnInitialize();
+    if (service == nullptr)
+    {
+        return false;
+    }
+
+    return reinterpret_cast<XService*>(service)->IsEncrypted(data, size);
 }
 
-void* xencrypt_service_register_plugin(void* plugin)
+void xencrypt_service_deinitialize(void* service)
 {
-    return XService::RegisterPlugin(reinterpret_cast<XEncryptPlugin*>(plugin));
+    if (service == nullptr)
+    {
+        return;
+    }
+    delete reinterpret_cast<XService*>(service);
 }
 
-void* xencrypt_create_xcontext(int type)
+void* xencrypt_service_decrypt(void* service, const byte* in, int64_t in_size, int* code, void** out, int64_t* out_size)
 {
-    return (void*)XService::CreateContext((XContextType)type);
-}
-
-void xencrypt_release_xcontext(void* context)
-{
-    XService::ReleaseContext(reinterpret_cast<XContext*>(context));
-}
-
-int xencrypt_service_decrypt(void* context, const byte* in, int64_t in_size, void** out, int64_t* out_size)
-{
-    XContext* x = reinterpret_cast<XContext*>(context);
-    ResultCode code = XService::Decrypt(x, in, in_size);   
+    XService* x = reinterpret_cast<XService*>(service);
+    if (x == nullptr)
+    {
+        if (code != nullptr)
+        {
+            *code = ResultCode::UnInitialize;
+        }
+        return nullptr;
+    }
+    XResult* result = x->Decrypt(in, in_size);
     int64_t dataLength = 0;
     void* pOut = nullptr;
-    if (x != nullptr)
+
+    if (code != nullptr)
     {
-        pOut = x->GetResultData();
-        dataLength = x->GetResultDataLength();
+        *code = ResultCode::Unknown;
+    }
+    if (result != nullptr)
+    {
+        if (code != nullptr)
+        {
+            *code = result->GetCode();
+        }
+        pOut = result->GetData();
+        dataLength = result->GetDataSize();
     }
     if (out_size != nullptr)
     {
@@ -48,19 +65,35 @@ int xencrypt_service_decrypt(void* context, const byte* in, int64_t in_size, voi
     {
         *out = pOut;
     }
-    return code;
+    return result;
 }
 
-int xencrypt_service_encrypt(void* context, const byte* in, int64_t in_size, void** out, int64_t* out_size)
+void* xencrypt_service_encrypt(void* service, const byte* in, int64_t in_size, int* code, void** out, int64_t* out_size)
 {
-    XContext* x = reinterpret_cast<XContext*>(context);
-    ResultCode code = XService::Encrypt(x, in, in_size);   
+    XService* x = reinterpret_cast<XService*>(service);
+    if (x == nullptr)
+    {
+        if (code != nullptr)
+        {
+            *code = ResultCode::UnInitialize;
+        }
+        return nullptr;
+    }
+    XResult* result = x->Encrypt(in, in_size);   
     int64_t dataLength = 0;
     void* pOut = nullptr;
-    if (x != nullptr)
+    if (code != nullptr)
     {
-        pOut = x->GetResultData();
-        dataLength = x->GetResultDataLength();
+        *code = ResultCode::Unknown;
+    }
+    if (result != nullptr)
+    {
+        if (code != nullptr)
+        {
+            *code = result->GetCode();
+        }
+        pOut = result->GetData();
+        dataLength = result->GetDataSize();
     }
     if (out_size != nullptr)
     {
@@ -70,5 +103,13 @@ int xencrypt_service_encrypt(void* context, const byte* in, int64_t in_size, voi
     {
         *out = pOut;
     }
-    return code;
+    return result;
+}
+
+void xencrypt_service_release_result(void* result)
+{
+    if (result != nullptr)
+    {
+        delete static_cast<XResult*>(result);
+    }
 }

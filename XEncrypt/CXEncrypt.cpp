@@ -1,18 +1,15 @@
 ﻿// CXEncrypt.cpp: 定义应用程序的入口点。
 //
 
+#include "iostream"
 #include "CXEncrypt.h"
 #include "encrypt/service/XService.h"
-#include "encrypt/service/XContext.h"
 #include "encrypt/service/Common.h"
 #include "encrypt/RuntimeApi.h"
 #include "encrypt/common/Allocator.h"
 
-#include "encrypt/RuntimeApi.h"
-
-#include "encrypt/plugin/xef/XEFHeader.h"
 #include "encrypt/plugin/xef/XEncodeType.h"
-#include "encrypt/plugin/xef/XEFEncryptPlugin.h"
+#include "encrypt/plugin/xef/XEFPlugin.h"
 #include "encrypt/plugin/xef/XEFRuntimeApi.h"
 
 using namespace std;
@@ -25,54 +22,46 @@ int main()
 {
     {
         //C++
-        XEFEncryptPlugin* plugin = new XEFEncryptPlugin(XEncodeType::XGZip, 32);
-        
-
-        //Encrypting data
-        
-        //if(XEFEncryptPlugin::IsEncrypted(rawData, length))
-        //{
-        //    cout>>"data has been encrypted."<<endl;
-        //}
+        XEFPlugin* plugin = new XEFPlugin(XEncodeType::XGZip, 32);
         
         //start service
-        XService::Initialize(plugin);
+        XService* service = new XService(plugin);
+        //Encrypting data
 
-        XContext* pContext = XService::CreateContext(XContextType::XEncrypt);
+        if(service->IsEncrypted(rawData, length))
+        {
+            std::cout<<"data has been encrypted."<<endl;
+        }
 
-        ResultCode result = XService::Encrypt(pContext, rawData, length);
+        XResult* result = service->Encrypt(rawData, length);
 
         const byte* encryptedData = nullptr;
-        int64_t encryptedDataLength = pContext->GetResultDataLength();
 
-        if (result != ResultCode::Ok)
+        int64_t encryptedDataLength = 0;
+        if (result->GetCode() != ResultCode::Ok)
         {
             //todo something.
         }
         else
         {
+            encryptedDataLength = result->GetDataSize();
             //continue to do something for encryptedData.
             encryptedData = (const byte*)XMEMORY_MALLOC(encryptedDataLength);
-            memcpy((void*)encryptedData, pContext->GetResultData(), encryptedDataLength);
+            memcpy((void*)encryptedData, result->GetData(), encryptedDataLength);
         }
-
-        XService::ReleaseContext(pContext);
-
-
+        
+        delete result;
+        result = nullptr;
         //Decrypting data
 
-        // if(!XEFEncryptPlugin::IsEncrypted(encryptedData, length))
-        // {
-        //     cout>>"data dose not have been encrypted."<<endl;
-        // }
+         if(!service->IsEncrypted(encryptedData, length))
+         {
+             cout<<"data dose not have been encrypted."<<endl;
+         }
 
-        pContext = XService::CreateContext(XContextType::XDecrypt);
-        result = XService::Decrypt(pContext, encryptedData, encryptedDataLength, true);
+        result = service->Decrypt(encryptedData, encryptedDataLength, true);
 
-        const byte* decryptedData = pContext->GetResultData();
-        int64_t decryptedDataLength = pContext->GetResultDataLength();
-
-        if (result != ResultCode::Ok)
+        if (result->GetCode() != ResultCode::Ok)
         {
             //todo something.
         }
@@ -80,12 +69,14 @@ int main()
         {
             //continue to do something for decryptedData.
         }
-        XService::ReleaseContext(pContext);
+        delete result;
+        result = nullptr;
 
         XMEMORY_SAFE_FREE(encryptedData);
 
         //stop service
-        XService::UnInitialize();
+        delete service;
+        service = nullptr;
 
         delete plugin;
         plugin = nullptr;
@@ -95,24 +86,21 @@ int main()
         //C API
         void* plugin = xefencrypt_plugin_create(XEncodeType::XGZip, 32);
         //start service
-        xencrypt_service_initialize(plugin);
+        void* service = xencrypt_service_initialize(plugin);
 
-        //Encrypting data
-        // 
-        // if(xefencrypt_is_encrypted(data, length))
-        // {
-        //     printf("data has been encrypted.");
-        // }
-
-        void* pContext = xencrypt_create_xcontext(XContextType::XEncrypt);
+        //Encrypting data 
+        if(xencrypt_service_is_encrypted(service, rawData, length))
+        {
+            printf("data has been encrypted.");
+        }
 
         void* pEncryptBuff = nullptr;
         int64_t encryptedDataLength = 0;
-
-        int result = xencrypt_service_encrypt(pContext, rawData, length, &pEncryptBuff, &encryptedDataLength);
+        int code = 0;
+        void* result = xencrypt_service_encrypt(service, rawData, length, &code, &pEncryptBuff, &encryptedDataLength);
 
         const byte* encryptedData = nullptr;
-        if (result != ResultCode::Ok)
+        if (code != ResultCode::Ok)
         {
             //todo something.
         }
@@ -122,25 +110,18 @@ int main()
             encryptedData = (const byte*)XMEMORY_MALLOC(encryptedDataLength);
             memcpy((void*)encryptedData, pEncryptBuff, encryptedDataLength);
         }
-
-        xencrypt_release_xcontext(pContext);
-
-
+        xencrypt_service_release_result(result);
         //Decrypting data
-
-        // if(!xefencrypt_is_encrypted(data, length))
-        // {
-        //     printf("data dose not have been encrypted.");
-        // }
-
-
-        pContext = xencrypt_create_xcontext(XContextType::XDecrypt);
+        if(!xencrypt_service_is_encrypted(service, encryptedData, length))
+        {
+            printf("data dose not have been encrypted.");
+        }
 
         void* decryptedData = nullptr;
         int64_t decryptedDataLength = 0;
-        result = xencrypt_service_decrypt(pContext, encryptedData, encryptedDataLength, &decryptedData, &decryptedDataLength);
+        result = xencrypt_service_decrypt(service, encryptedData, encryptedDataLength, &code, &decryptedData, &decryptedDataLength);
 
-        if (result != ResultCode::Ok)
+        if (code != ResultCode::Ok)
         {
             //todo something.
         }
@@ -148,12 +129,12 @@ int main()
         {
             //continue to do something for decryptedData.
         }
-        
-        xencrypt_release_xcontext(pContext);
+        xencrypt_service_release_result(result);
 
         XMEMORY_SAFE_FREE(encryptedData);
+
         //stop service
-        xencrypt_service_deinitialize();
+        xencrypt_service_deinitialize(service);
 
         xefencrypt_plugin_destroy(plugin);
     }
