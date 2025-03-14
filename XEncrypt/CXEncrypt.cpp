@@ -1,5 +1,4 @@
 ﻿// CXEncrypt.cpp: 定义应用程序的入口点。
-//
 
 #include "iostream"
 #include "CXEncrypt.h"
@@ -50,14 +49,13 @@ int main()
             memcpy((void*)encryptedData, result->GetData(), encryptedDataLength);
         }
         
-        delete result;
+        service->ReleaseResult(result);
         result = nullptr;
         //Decrypting data
-
-         if(!service->IsEncrypted(encryptedData, length))
-         {
-             cout<<"data dose not have been encrypted."<<endl;
-         }
+        if(!service->IsEncrypted(encryptedData, length))
+        {
+            cout<<"data dose not have been encrypted."<<endl;
+        }
 
         result = service->Decrypt(encryptedData, encryptedDataLength, true);
 
@@ -69,7 +67,7 @@ int main()
         {
             //continue to do something for decryptedData.
         }
-        delete result;
+        service->ReleaseResult(result);
         result = nullptr;
 
         XMEMORY_SAFE_FREE(encryptedData);
@@ -110,7 +108,7 @@ int main()
             encryptedData = (const byte*)XMEMORY_MALLOC(encryptedDataLength);
             memcpy((void*)encryptedData, pEncryptBuff, encryptedDataLength);
         }
-        xencrypt_service_release_result(result);
+        xencrypt_service_release_result(service, result);
         //Decrypting data
         if(!xencrypt_service_is_encrypted(service, encryptedData, length))
         {
@@ -129,7 +127,7 @@ int main()
         {
             //continue to do something for decryptedData.
         }
-        xencrypt_service_release_result(result);
+        xencrypt_service_release_result(service, result);
 
         XMEMORY_SAFE_FREE(encryptedData);
 

@@ -32,7 +32,7 @@ extern "C"
     EXPORT_API(void*, xencrypt_service_decrypt, (void* service, const byte* in, int64_t in_size, int* code, void** out, int64_t* out_size));
     /// @brief 销毁结果
     /// @param result 加/解密结果指针
-    EXPORT_API(void, xencrypt_service_release_result, (void* result));
+    EXPORT_API(void, xencrypt_service_release_result, (void* service, void* result));
     /// @brief 注销服务
     EXPORT_API(void, xencrypt_service_deinitialize, (void* service));
  #undef EXPORT_API

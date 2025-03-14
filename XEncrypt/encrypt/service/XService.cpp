@@ -70,4 +70,14 @@ namespace xencrypt
         pResult->SetResultCode(context->GetResultCode());
         return pResult;
     }
+
+    void XService::ReleaseResult(XResult* result)
+    {
+        if (result != nullptr)
+        {
+            delete result;
+        }
+        result = nullptr;
+    }
+
 }

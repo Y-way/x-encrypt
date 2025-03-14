@@ -106,10 +106,7 @@ void* xencrypt_service_encrypt(void* service, const byte* in, int64_t in_size, i
     return result;
 }
 
-void xencrypt_service_release_result(void* result)
+void xencrypt_service_release_result(void* service, void* result)
 {
-    if (result != nullptr)
-    {
-        delete static_cast<XResult*>(result);
-    }
+    reinterpret_cast<XService*>(service)->ReleaseResult(reinterpret_cast<XResult*>(result));
 }

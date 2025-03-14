@@ -34,6 +34,9 @@ namespace xencrypt
 		/// @param length 数据长度
         /// @return 返回加密结果指针.该指针需要手动释放.
         XResult* Encrypt(const byte* in, int64_t length);
+        /// @brief 释放加密/解密结果
+		/// @param result 加密/解密结果 
+        void ReleaseResult(XResult* result);
 	private:
 		XPlugin* _plugin;
 	};
