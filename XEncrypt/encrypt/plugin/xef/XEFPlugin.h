@@ -12,7 +12,9 @@ namespace xencrypt
     public:
         XEFPlugin(XEncodeType type, uint8_t encryptSize);
         ~XEFPlugin();
-
+        XEFPlugin(const XEFPlugin&) = delete;
+        XEFPlugin(XEFPlugin&&) = delete;
+        XEFPlugin& operator=(const XEFPlugin&) = delete;
     public:
         /// @brief 检查数据是否已加密
         /// @param data 内存数据地址
