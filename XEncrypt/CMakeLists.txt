@@ -37,6 +37,8 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(SUPPORT_ENCRYPT "Support encrypt data sevice" ON)
 option(SUPPORT_DECRYPT "Support decrypt data sevice" ON)
+option(XENCRYPT_TESTS "Testing for XEncrypt" OFF)
+
 
 set(XENCRYPT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
@@ -237,11 +239,12 @@ set(XENCRYPT_PRIVATE_HDRS
     encrypt/common/Logging.h
     encrypt/common/ZipUtils.h 
     encrypt/service/Common.h 
+    encrypt/service/XResult.h 
     encrypt/service/XContext.h
     encrypt/service/XService.h
     encrypt/plugin/Decoder.h
     encrypt/plugin/Encoder.h
-    encrypt/plugin/XEncryptPlugin.h)
+    encrypt/plugin/XPlugin.h)
 
 set(XENCRYPT_PRIVATE_SRCS
     encrypt/common/Allocator.cpp
@@ -249,6 +252,7 @@ set(XENCRYPT_PRIVATE_SRCS
     encrypt/common/Logging.cpp
     encrypt/common/ZipUtils.cpp
     encrypt/service/XService.cpp
+    encrypt/service/XResult.cpp
     encrypt/service/XContext.cpp
     encrypt/api_types.h
     encrypt/config.h
@@ -262,14 +266,14 @@ set(XENCRYPT_PLGUIN_XEF_HDRS
     encrypt/plugin/xef/XEncodeType.h
     encrypt/plugin/xef/XEFDecoder.h
     encrypt/plugin/xef/XEFEncoder.h
-    encrypt/plugin/xef/XEFEncryptPlugin.h
+    encrypt/plugin/xef/XEFPlugin.h
     encrypt/plugin/xef/XEFRuntimeApi.h
 )
 
 set(XENCRYPT_PLGUIN_XEF_SRCS
     encrypt/plugin/xef/XEFDecoder.cpp
     encrypt/plugin/xef/XEFEncoder.cpp
-    encrypt/plugin/xef/XEFEncryptPlugin.cpp
+    encrypt/plugin/xef/XEFPlugin.cpp
     encrypt/plugin/xef/XEFRuntimeApi.cpp
 )
 
@@ -286,8 +290,7 @@ set(XENCRYPT_SOURCES
 
 set(XENCRYPT_INC_DIRS
     ${XENCRYPT_ROOT}
-    "${XENCRYPT_ROOT}/encrypt"
-    )
+    "${XENCRYPT_ROOT}/encrypt")
         
 macro(source_group_by_dir proj_dir source_files)
 if(MSVC OR APPLE)
@@ -356,7 +359,7 @@ message(STATUS "XENCRYPT_SERVICE=${XENCRYPT_SERVICE}")
 if (BUILD_SHARED_LIBS)
     target_compile_definitions(${xencrypt_target_name} PUBLIC  XENCRYPT_EXPORT_API ${XENCRYPT_SERVICE})
 else()
-    target_compile_definitions(${xencrypt_target_name} PUBLIC  XENCRYPT_IMPORT_API ${XENCRYPT_SERVICE})
+    target_compile_definitions(${xencrypt_target_name} PUBLIC  ${XENCRYPT_SERVICE})
 endif()
 
 macro(xencrypt_config_lib_depends target_name)
@@ -405,9 +408,9 @@ endmacro()
 encrypt_config_lib_options(${xencrypt_target_name})
 
 ### Sets startup project for vs .sln
-if (WIN32 AND XENCRYPT_BUILD_TESTS)
+if (WIN32 AND XENCRYPT_TESTS)
     add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
-    target_link_libraries(CXEncrypt libXEncrypt)
+    target_link_libraries(CXEncrypt ${xencrypt_target_name})
 
     set_target_properties(CXEncrypt
         PROPERTIES
