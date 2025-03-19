@@ -92,23 +92,21 @@ int main()
             printf("data has been encrypted.");
         }
 
-        void* pEncryptBuff = nullptr;
-        int64_t encryptedDataLength = 0;
-        int code = 0;
-        void* result = xencrypt_service_encrypt(service, rawData, length, &code, &pEncryptBuff, &encryptedDataLength);
-
+        
+        xencrypt_result result = xencrypt_service_encrypt(service, rawData, length);
         const byte* encryptedData = nullptr;
-        if (code != ResultCode::Ok)
+        int64_t encryptedDataLength = result.size;
+        if (result.code != ResultCode::Ok)
         {
             //todo something.
         }
         else
         {
             //continue to do something for encryptedData.
-            encryptedData = (const byte*)XMEMORY_MALLOC(encryptedDataLength);
-            memcpy((void*)encryptedData, pEncryptBuff, encryptedDataLength);
+            encryptedData = (const byte*)XMEMORY_MALLOC(result.size);
+            memcpy((void*)encryptedData, result.data, result.size);
         }
-        xencrypt_service_release_result(service, result);
+        xencrypt_service_release_result(service, &result);
         //Decrypting data
         if(!xencrypt_service_is_encrypted(service, encryptedData, length))
         {
@@ -117,9 +115,9 @@ int main()
 
         void* decryptedData = nullptr;
         int64_t decryptedDataLength = 0;
-        result = xencrypt_service_decrypt(service, encryptedData, encryptedDataLength, &code, &decryptedData, &decryptedDataLength);
+        result = xencrypt_service_decrypt(service, encryptedData, encryptedDataLength);
 
-        if (code != ResultCode::Ok)
+        if (result.code != ResultCode::Ok)
         {
             //todo something.
         }
@@ -127,7 +125,7 @@ int main()
         {
             //continue to do something for decryptedData.
         }
-        xencrypt_service_release_result(service, result);
+        xencrypt_service_release_result(service, &result);
 
         XMEMORY_SAFE_FREE(encryptedData);
 
