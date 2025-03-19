@@ -57,7 +57,7 @@ int main()
 
         XResult* result = service->Encrypt(rawData, length);
 
-        const byte* encryptedData = nullptr;
+        byte* encryptedData = nullptr;
 
         int64_t encryptedDataLength = 0;
         if (result->GetCode() != ResultCode::Ok)
@@ -68,18 +68,19 @@ int main()
         {
             encryptedDataLength = result->GetDataSize();
             //continue to do something for encryptedData.
-            encryptedData = (const byte*)XMEMORY_MALLOC(encryptedDataLength);
+            encryptedData = (byte*)XMEMORY_MALLOC(encryptedDataLength);
             memcpy((void*)encryptedData, result->GetData(), encryptedDataLength);
         }
         
         service->ReleaseResult(result);
         result = nullptr;
+
         //Decrypting data
         if(!service->IsEncrypted(encryptedData, encryptedDataLength))
         {
             cout<<"data dose not have been encrypted."<<endl;
         }
-
+        byte* decryptedData = nullptr;
         result = service->Decrypt(encryptedData, encryptedDataLength, true);
 
         if (result->GetCode() != ResultCode::Ok)
@@ -89,11 +90,11 @@ int main()
         else
         {
             //continue to do something for decryptedData.
+            decryptedData = (byte*)XMEMORY_MALLOC(result->GetDataSize());
+            memcpy((void*)decryptedData, result->GetData(), result->GetDataSize());
         }
         service->ReleaseResult(result);
         result = nullptr;
-
-        XMEMORY_SAFE_FREE(encryptedData);
 
         //stop service
         delete service;
@@ -101,6 +102,10 @@ int main()
 
         delete plugin;
         plugin = nullptr;
+
+        XMEMORY_SAFE_FREE(encryptedData);
+
+        XMEMORY_SAFE_FREE(decryptedData);
     }
 
     {
@@ -115,49 +120,52 @@ int main()
             printf("data has been encrypted.");
         }
 
-        void* pEncryptBuff = nullptr;
-        int64_t encryptedDataLength = 0;
-        int code = 0;
-        void* result = xencrypt_service_encrypt(service, rawData, length, &code, &pEncryptBuff, &encryptedDataLength);
-
-        const byte* encryptedData = nullptr;
-        if (code != ResultCode::Ok)
+        xencrypt_result result = xencrypt_service_encrypt(service, rawData, length);
+        byte* encryptedData = nullptr;
+        int64_t encryptedDataLength = result.size;
+        if (result.code != ResultCode::Ok)
         {
             //todo something.
         }
         else
         {
             //continue to do something for encryptedData.
-            encryptedData = (const byte*)XMEMORY_MALLOC(encryptedDataLength);
-            memcpy((void*)encryptedData, pEncryptBuff, encryptedDataLength);
+            encryptedData = (byte*)XMEMORY_MALLOC(result.size);
+            memcpy((void*)encryptedData, result.data, result.size);
         }
-        xencrypt_service_release_result(service, result);
+        xencrypt_service_release_result(service, &result);
         //Decrypting data
         if(!xencrypt_service_is_encrypted(service, encryptedData, length))
         {
             printf("data dose not have been encrypted.");
         }
 
-        void* decryptedData = nullptr;
-        int64_t decryptedDataLength = 0;
-        result = xencrypt_service_decrypt(service, encryptedData, encryptedDataLength, &code, &decryptedData, &decryptedDataLength);
+        byte* decryptedData = nullptr;
 
-        if (code != ResultCode::Ok)
+        result = xencrypt_service_decrypt(service, encryptedData, encryptedDataLength);
+
+        if (result.code != ResultCode::Ok)
         {
             //todo something.
         }
         else
         {
             //continue to do something for decryptedData.
+            decryptedData = (byte*)XMEMORY_MALLOC(result.size);
+            memcpy((void*)decryptedData, result.data, result.size);
         }
-        xencrypt_service_release_result(service, result);
 
-        XMEMORY_SAFE_FREE(encryptedData);
-
+        xencrypt_service_release_result(service, &result);
+        
         //stop service
         xencrypt_service_deinitialize(service);
+        service = nullptr;
 
         xef_plugin_destroy(plugin);
+        plugin = nullptr;
+
+        XMEMORY_SAFE_FREE(decryptedData);
+        XMEMORY_SAFE_FREE(encryptedData);
     }
     getchar();
 }
