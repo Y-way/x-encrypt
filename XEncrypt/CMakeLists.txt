@@ -410,7 +410,7 @@ encrypt_config_lib_options(${xencrypt_target_name})
 
 ### Sets startup project for vs .sln
 if (WIN32 AND XENCRYPT_TESTS)
-    add_executable (CXEncrypt CXEncrypt.cpp CXEncrypt.h)
+    add_executable (CXEncrypt ./test/CXEncrypt.cpp ./test/CXEncrypt.h)
     target_link_libraries(CXEncrypt ${xencrypt_target_name})
 
     set_target_properties(CXEncrypt
