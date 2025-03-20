@@ -108,27 +108,29 @@ namespace xencrypt
         size_t unpackedLen = inSize;
         context->SetMemoryType(XCodeMemoryType::OriginalOffset);
 
-        if (context->IsEncrypted(input, inSize))//Decrypt data.
+        if (!context->IsEncrypted(input, inSize))//Decrypt data.
         {
-            if (context->IsCloneInputData())
+            context->SetResultCode(ResultCode::InvalidInputData);
+            return;
+        }
+        if (context->IsCloneInputData())
+        {
+            //copy the original data.
+            CopyDataScope scope(context->GetInputData(), inSize);
+            if (!DecryptData(context, scope.GetData(), &unpackedData, unpackedLen))
             {
-                //copy the original data.
-                CopyDataScope scope(context->GetInputData(), inSize);
-                if (!DecryptData(context, scope.GetData(), &unpackedData, unpackedLen))
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if (!DecryptData(context, input, &unpackedData, unpackedLen))
-                {
-                    return;
-                }
+                return;
             }
         }
-        context->SetResultData(unpackedData, unpackedLen);
+        else
+        {
+            if (!DecryptData(context, input, &unpackedData, unpackedLen))
+            {
+                return;
+            }
+        }
         context->SetResultCode(ResultCode::Ok);
+        context->SetResultData(unpackedData, unpackedLen);
 #else
         context->SetResultCode(ResultCode::NotSupportDecrypt);
 #endif // !XEF_DECRYPT_SERVICE
