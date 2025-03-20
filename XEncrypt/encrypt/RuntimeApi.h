@@ -39,7 +39,7 @@ extern "C"
     /// @param in 待解密数据
     /// @param in_size 密数据长度
     /// @return 解密结果
-    XENCRYPT_API xencrypt_result xencrypt_service_decrypt(void* service, const byte* in, int64_t in_size);
+    XENCRYPT_API xencrypt_result xencrypt_service_decrypt(void* service, const byte* in, int64_t in_size, bool cloneInput = false);
     /// @brief 销毁结果
     /// @param service 加密/解密服务实例
     /// @param result 加/解密结果指针

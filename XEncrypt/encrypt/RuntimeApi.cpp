@@ -1,6 +1,6 @@
 ﻿#include "RuntimeApi.h"
+#include "service/Common.h"
 #include "service/XService.h"
-#include "service/XContext.h"
 #include "service/XResult.h"
 
 using namespace xencrypt;
@@ -37,7 +37,7 @@ XENCRYPT_API void xencrypt_service_deinitialize(void* service)
 XENCRYPT_API xencrypt_result xencrypt_service_encrypt(void* service, const byte* in, int64_t in_size)
 {
     XService* x = reinterpret_cast<XService*>(service);
-    xencrypt_result retVal = { ResultCode::Unknown, 0, nullptr, nullptr};
+    xencrypt_result retVal = { ResultCode::Unknown, 0, nullptr, nullptr };
     if (x == nullptr)
     {
         retVal.code = ResultCode::UnInitialize;
@@ -55,16 +55,16 @@ XENCRYPT_API xencrypt_result xencrypt_service_encrypt(void* service, const byte*
     return retVal;
 }
 
-XENCRYPT_API xencrypt_result xencrypt_service_decrypt(void* service, const byte* in, int64_t in_size)
+XENCRYPT_API xencrypt_result xencrypt_service_decrypt(void* service, const byte* in, int64_t in_size, bool cloneInput/* = false */)
 {
     XService* x = reinterpret_cast<XService*>(service);
-    xencrypt_result retVal = { ResultCode::Unknown, 0, nullptr, nullptr};
+    xencrypt_result retVal = { ResultCode::Unknown, 0, nullptr, nullptr };
     if (x == nullptr)
     {
         retVal.code = ResultCode::UnInitialize;
         return retVal;
     }
-    XResult* result = x->Decrypt(in, in_size);
+    XResult* result = x->Decrypt(in, in_size, cloneInput);
     
     if (result != nullptr)
     {
