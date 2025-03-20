@@ -9,10 +9,6 @@
 
 #include "config_api.h"
 
-#if !defined(XEF_DECRYPT_SERVICE) && !defined(XEF_ENCRYPT_SERVICE)
-#error "Must define at least one of XEF_DECRYPT_SERVICE or XEF_ENCRYPT_SERVICE"
-#endif
-
 #if !defined(__cplusplus)
 #define bool uint8_t
 #endif // !__cplusplus

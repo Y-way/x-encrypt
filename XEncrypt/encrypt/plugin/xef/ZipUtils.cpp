@@ -2,8 +2,10 @@
 #include "ZipUtils.h"
 
 #include "zlib/zlib.h"
-#include "Logging.h"
-#include "Allocator.h"
+
+#include "common/Logging.h"
+#include "common/Allocator.h"
+
 #include <string.h>
 #include <memory>
 

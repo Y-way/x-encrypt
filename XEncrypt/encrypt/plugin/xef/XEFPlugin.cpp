@@ -1,6 +1,7 @@
-﻿#include "XEFPlugin.h"
+﻿#include "common/Logging.h"
+#include "define.h"
+#include "XEFPlugin.h"
 #include "XEFHeader.h"
-#include "common/Logging.h"
 #include "XEFEncoder.h"
 #include "XEFDecoder.h"
 namespace xencrypt

@@ -1,9 +1,4 @@
 ﻿#pragma once
-
-static const byte kXFileSignatureCode[] = { '@', 'X', 'F', 'E' };
-template<typename T = uint32_t>
-bool IS_XFILE_SIGNATURE_CODE(T code) { return (code == *((uint32_t*)(&kXFileSignatureCode))); }
-
 namespace xencrypt
 {
     /// @brief XEF格式数据加密头部
@@ -24,4 +19,9 @@ namespace xencrypt
         /// @brief 预留字段
         uint32_t reserved;
     }XEFHeader;
+
+    
+    static const byte kXFileSignatureCode[] = { '@', 'X', 'F', 'E' };
+    template<typename T = uint32_t>
+    bool IS_XFILE_SIGNATURE_CODE(T code) { return (code == *((uint32_t*)(&kXFileSignatureCode))); }
 }

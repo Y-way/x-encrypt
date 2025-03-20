@@ -156,6 +156,8 @@ if(PLATFORM_WINDOWS)
 
     if (FULL_MSVC)
         add_compile_options(/Bv /GF)
+        add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/source-charset:utf-8>")
+        add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/execution-charset:utf-8>")
     else()
         add_definitions(-D__STDC_FORMAT_MACROS)
     endif()
@@ -182,85 +184,88 @@ include_directories(${XENCRYPT_ROOT})
 include_directories("${XENCRYPT_ROOT}/encrypt")
 
 set(XXHASH_HDRS
-    encrypt/xxHash/xxh3.h
-    encrypt/xxHash/xxhash.h
+    encrypt/plugin/xef/xxHash/xxh3.h
+    encrypt/plugin/xef/xxHash/xxhash.h
 )
 
 set(XXHASH_SRCS
-    encrypt/xxHash/xxhash.c
+    encrypt/plugin/xef/xxHash/xxhash.c
 )
 
 set(ZLIB_PUBLIC_HDRS
-    encrypt/zlib/zconf.h
-    encrypt/zlib/zlib.h
+    encrypt/plugin/xef/zlib/zconf.h
+    encrypt/plugin/xef/zlib/zlib.h
 )
 
 set(ZLIB_PRIVATE_HDRS
-    encrypt/zlib/crc32.h
-    encrypt/zlib/deflate.h
-    encrypt/zlib/gzguts.h
-    encrypt/zlib/inffast.h
-    encrypt/zlib/inffixed.h
-    encrypt/zlib/inflate.h
-    encrypt/zlib/inftrees.h
-    encrypt/zlib/trees.h
-    encrypt/zlib/zutil.h
+    encrypt/plugin/xef/zlib/crc32.h
+    encrypt/plugin/xef/zlib/deflate.h
+    encrypt/plugin/xef/zlib/gzguts.h
+    encrypt/plugin/xef/zlib/inffast.h
+    encrypt/plugin/xef/zlib/inffixed.h
+    encrypt/plugin/xef/zlib/inflate.h
+    encrypt/plugin/xef/zlib/inftrees.h
+    encrypt/plugin/xef/zlib/trees.h
+    encrypt/plugin/xef/zlib/zutil.h
 )
 
 set(ZLIB_SRCS
-    encrypt/zlib/adler32.c
-    encrypt/zlib/compress.c
-    encrypt/zlib/crc32.c
-    encrypt/zlib/deflate.c
-    encrypt/zlib/gzclose.c
-    encrypt/zlib/gzlib.c
-    encrypt/zlib/gzread.c
-    encrypt/zlib/gzwrite.c
-    encrypt/zlib/inflate.c
-    encrypt/zlib/infback.c
-    encrypt/zlib/inftrees.c
-    encrypt/zlib/inffast.c
-    encrypt/zlib/trees.c
-    encrypt/zlib/uncompr.c
-    encrypt/zlib/zutil.c
+    encrypt/plugin/xef/zlib/adler32.c
+    encrypt/plugin/xef/zlib/compress.c
+    encrypt/plugin/xef/zlib/crc32.c
+    encrypt/plugin/xef/zlib/deflate.c
+    encrypt/plugin/xef/zlib/gzclose.c
+    encrypt/plugin/xef/zlib/gzlib.c
+    encrypt/plugin/xef/zlib/gzread.c
+    encrypt/plugin/xef/zlib/gzwrite.c
+    encrypt/plugin/xef/zlib/inflate.c
+    encrypt/plugin/xef/zlib/infback.c
+    encrypt/plugin/xef/zlib/inftrees.c
+    encrypt/plugin/xef/zlib/inffast.c
+    encrypt/plugin/xef/zlib/trees.c
+    encrypt/plugin/xef/zlib/uncompr.c
+    encrypt/plugin/xef/zlib/zutil.c
 )
 
 set(XENCRYPT_PUBLIC_HDRS
     encrypt/config.h
     encrypt/config_api.h
     encrypt/platforms.h
-    encrypt/RuntimeApi.h)
+    encrypt/RuntimeApi.h
+)
 
 set(XENCRYPT_PRIVATE_HDRS
     encrypt/common/Allocator.h
     encrypt/common/XAssert.h
-    encrypt/common/Logging.h
-    encrypt/common/ZipUtils.h 
+    encrypt/common/Logging.h 
     encrypt/service/Common.h 
     encrypt/service/XResult.h 
     encrypt/service/XContext.h
     encrypt/service/XService.h
     encrypt/plugin/Decoder.h
     encrypt/plugin/Encoder.h
-    encrypt/plugin/XPlugin.h)
+    encrypt/plugin/XPlugin.h
+)
 
 set(XENCRYPT_PRIVATE_SRCS
     encrypt/common/Allocator.cpp
     encrypt/common/XAssert.cpp
     encrypt/common/Logging.cpp
-    encrypt/common/ZipUtils.cpp
     encrypt/service/XService.cpp
     encrypt/service/XResult.cpp
     encrypt/service/XContext.cpp
-    encrypt/RuntimeApi.cpp)
+    encrypt/RuntimeApi.cpp
+)
 
 set(XENCRYPT_PLGUIN_XEF_HDRS
+    encrypt/plugin/xef/define.h
     encrypt/plugin/xef/XEFHeader.h
     encrypt/plugin/xef/XEncodeType.h
     encrypt/plugin/xef/XEFDecoder.h
     encrypt/plugin/xef/XEFEncoder.h
     encrypt/plugin/xef/XEFPlugin.h
     encrypt/plugin/xef/XEFRuntimeApi.h
+    encrypt/plugin/xef/ZipUtils.h
 )
 
 set(XENCRYPT_PLGUIN_XEF_SRCS
@@ -268,6 +273,7 @@ set(XENCRYPT_PLGUIN_XEF_SRCS
     encrypt/plugin/xef/XEFEncoder.cpp
     encrypt/plugin/xef/XEFPlugin.cpp
     encrypt/plugin/xef/XEFRuntimeApi.cpp
+    encrypt/plugin/xef/ZipUtils.cpp
 )
 
 set(XENCRYPT_SOURCES
@@ -279,11 +285,13 @@ set(XENCRYPT_SOURCES
     ${XENCRYPT_PRIVATE_HDRS} 
     ${XENCRYPT_PRIVATE_SRCS}
     ${XENCRYPT_PLGUIN_XEF_HDRS}
-    ${XENCRYPT_PLGUIN_XEF_SRCS})
+    ${XENCRYPT_PLGUIN_XEF_SRCS}
+)
 
 set(XENCRYPT_INC_DIRS
     ${XENCRYPT_ROOT}
-    "${XENCRYPT_ROOT}/encrypt")
+    "${XENCRYPT_ROOT}/encrypt"
+)
         
 macro(source_group_by_dir proj_dir source_files)
 if(MSVC OR APPLE)

@@ -1,6 +1,5 @@
 ﻿#include "common/Logging.h"
 #include "common/Allocator.h"
-#include "common/ZipUtils.h"
 #include "service/Common.h"
 #include "service/XService.h"
 
@@ -8,7 +7,7 @@
 #include "XEFHeader.h"
 #include "XEncodeType.h"
 #include "XEFPlugin.h"
-
+#include "ZipUtils.h"
 namespace xencrypt
 {
     namespace

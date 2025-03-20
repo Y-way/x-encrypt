@@ -11,7 +11,7 @@ namespace xencrypt
     {
     public:
         XPlugin():_encoder(nullptr), _decoder(nullptr) {}
-		virtual ~XPlugin() {}
+		virtual ~XPlugin() = default;
 
     public:
         /// @brief 根据XContext上下文类型,判定当前插件是否支持

@@ -8,14 +8,17 @@
 namespace xencrypt
 {
     /// @brief XEF格式加密器
-    class XENCRYPT_API XEFEncoder : public Encoder
+    class XENCRYPT_API XEFEncoder final : public Encoder
     {
     public:
         XEFEncoder(XEncodeType encodeType, uint8_t encryptSize):_encodeType(encodeType),_encryptSize(encryptSize){};
-        virtual ~XEFEncoder() {};
+        virtual ~XEFEncoder() = default;
+        XEFEncoder (XEFEncoder&&) noexcept = default;
+        XEFEncoder (const XEFEncoder&) = delete;
+        XEFEncoder& operator=(XEFEncoder&&) = delete;
         /// @brief 加密处理
         /// @param context 加密上下文
-        virtual void Encode(XContext* context) X_ENCRYPT_FINAL;
+        virtual void Encode(XContext* context) final override;
 
     private:
         byte* EncryptData(byte* rawdata, int size);
