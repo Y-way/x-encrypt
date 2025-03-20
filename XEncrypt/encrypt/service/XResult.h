@@ -9,7 +9,7 @@ namespace xencrypt
     class XENCRYPT_API XResult final
     {
     public:
-        XResult() = default;
+        XResult():_context(nullptr) {}
         ~XResult();
 
         XResult(const XResult&) = delete;
@@ -26,22 +26,12 @@ namespace xencrypt
             return _context != nullptr ? _context->GetResultDataLength() : 0;
         }
 
-        ResultCode GetCode() const
-        {
-            return _resultCode;
-        }
-
+        ResultCode GetCode() const { return _resultCode; }
     private:
 
-        void SetResultCode(ResultCode code)
-        {
-            _resultCode = code;
-        }
+        void SetResultCode(ResultCode code) { _resultCode = code; }
 
-        void SetContext(XContext* context)
-        {
-            _context = context;
-        }
+        void SetContext(XContext* context) { _context = context; }
     private:
         XContext* _context;
         ResultCode _resultCode = ResultCode::Unknown;
