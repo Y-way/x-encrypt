@@ -204,7 +204,7 @@ int main()
     'XEFDecoder'类实现'Decoder'接口类,用于XEF格式数据解密.
     'XEFPlugin'类实现'XPlugin'插件接口类,用于注册到XService.
 
-[XEF加密格式说明](./XEFFormat.md).
+[XEF加密格式说明](./Document/XEFFormat.md).
 -----
 
 # XFileEncoder

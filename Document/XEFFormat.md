@@ -43,7 +43,7 @@ static const byte kXFileSignatureCode[] = { '@', 'X', 'F', 'E' };
 
 
 ## 加密算法:
-参见`XEF加密算法`[byte* XEFEncoder::EncryptData()](./XEncrypt/encrypt/plugin/xef/XEFEncoder.cpp#L134)
+参见`XEF加密算法`[byte* XEFEncoder::EncryptData()](../XEncrypt/encrypt/plugin/xef/XEFEncoder.cpp#L134)
 ```C
 /// @brief 加密数据
 /// @param rawdata 源数据.若支持GZip, rawdata=GZip(源数据), 否则为源数据.
@@ -64,4 +64,4 @@ byte* EncryptData(byte* rawdata, int size)
 ## 解密算法:
 
 加密算法的逆过程.
-参见`XEF解密算法`[bool XEFDecoder::DecryptData()](./XEncrypt/encrypt/plugin/xef/XEFDecoder.cpp#L45)
+参见`XEF解密算法`[bool XEFDecoder::DecryptData()](../XEncrypt/encrypt/plugin/xef/XEFDecoder.cpp#L45)
