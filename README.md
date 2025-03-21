@@ -5,11 +5,11 @@
 
 ## 使用CMake编译x-Encrypt的测试程序和示例程序
 ```sh
-git clone --recursive https://github.com/Y-way/x-Encrypt
-cd xencrypt
+git clone --recursive https://github.com/Y-way/x-encrypt
+cd x-encrypt
 
 # 如果是macOS Xcode, 这里命令应该换成：cmake -B build -GXcode
-cmake -B build
+cmake -B build -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_ARCHITECTURES=arm64 -DPLAT=iOS -DDEPLOYMENT_TARGET=11.0
 
 # 使用CMake命令行编译, 如果需要调试，则使用相应平台IDE打开即可:
 # a. Windows：使用VisualStudio打开build/CXEncrypt.sln
@@ -18,6 +18,17 @@ cmake --build build --config Debug
 
 # # 者直接用VS打开 
 ```
+
+## CMake 编译说明
+
+|编译宏|值|默认|说明|
+|---------------|----------------------|----|--------|
+|SUPPORT_ENCRYPT|ON:支持 <br /> OFF:关闭|ON  |支持加密|
+|SUPPORT_DECRYPT|ON:支持 <br /> OFF:关闭|ON  |支持解密|
+|XENCRYPT_TESTS |ON:支持 <br /> OFF:关闭|OFF |测试用例|
+
+#### 注:
+   `SUPPORT_ENCRYPT`和`SUPPORT_DECRYPT`必须至少开启其中一个
 
 ## 快速开始
 ```cpp
