@@ -20,7 +20,7 @@ namespace xencrypt
         uint32_t reserved;
     }XEFHeader;
 
-    
+    /// @brief XEF格式数据加密头部标记
     static const byte kXFileSignatureCode[] = { '@', 'X', 'F', 'E' };
     template<typename T = uint32_t>
     bool IS_XFILE_SIGNATURE_CODE(T code) { return (code == *((uint32_t*)(&kXFileSignatureCode))); }

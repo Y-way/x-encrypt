@@ -130,7 +130,9 @@ namespace xencrypt
         context->SetResultCode(ResultCode::NotSupportEncrypt);
 #endif // !XEF_ENCRYPT_SERVICE
     }
-    
+    /// @brief 加密数据
+    /// @param rawdata 源数据.若支持GZip, rawdata=GZip(源数据), 否则为源数据.
+    /// @param size 加密数据长度.Min(Clamp(size, 1, 255), rawdata_size)
     byte* XEFEncoder::EncryptData(byte* rawdata, int size)
     {
 #ifdef XEF_ENCRYPT_SERVICE
