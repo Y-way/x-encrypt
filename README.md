@@ -217,3 +217,7 @@ XFileEncoder command args
         XFileEncoder edcrypt -load test.png -out test.png
 
 ```
+
+# Unity插件
+
+[XEncrypt-Unity](https://github.com/Y-way/XEncrypt-Unity)
