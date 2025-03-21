@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <StartupObject>XFileEncoder.Program</StartupObject>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <SignAssembly>False</SignAssembly>
+    <IsPublishable>True</IsPublishable>
+    <TargetFramework>.NET6</TargetFramework>
+    <BaseOutputPath>..\x64</BaseOutputPath>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Prefer32Bit>True</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Prefer32Bit>True</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XEncryptAPI\XEncryptAPI.csproj" />
+    <ProjectReference Include="..\XEncrypt\XEncrypt.vcxproj" />
+  </ItemGroup>
+
+</Project>

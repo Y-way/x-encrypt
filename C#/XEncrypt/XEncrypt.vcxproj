@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{8a04487e-7b53-4a6c-aabe-ba48446f11b5}</ProjectGuid>
+    <RootNamespace>XEncryptApi</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>XEncrypt</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\netstandard2.1\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\.net6\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;XENCRYPTAPI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;XENCRYPTAPI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;XENCRYPTAPI_EXPORTS;_WINDOWS;WIN32;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;XEF_ENCRYPT_SERVICE;XEF_DECRYPT_SERVICE;XENCRYPT_EXPORT_API;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\XEncrypt\encrypt;$(SolutionDir)\..\XEncrypt\encrypt\common;$(SolutionDir)\..\XEncrypt\encrypt\plugin;$(SolutionDir)\..\XEncrypt\encrypt\service;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;XENCRYPTAPI_EXPORTS;_WINDOWS;WIN32;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;XENCRYPT_EXPORT_API;XEF_ENCRYPT_SERVICE;XEF_DECRYPT_SERVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>E:\Work\Tools\tool\XFileEncoder\XEncryptApi\encrypt\common;E:\Work\Tools\tool\XFileEncoder\XEncryptApi\encrypt;E:\Work\Tools\tool\XFileEncoder\XEncryptApi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\XEncrypt\encrypt\common\Allocator.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\common\Logging.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\common\XAssert.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\config.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\config_api.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\platforms.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\Decoder.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\Encoder.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\define.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFDecoder.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFEncoder.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFHeader.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFPlugin.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFRuntimeApi.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEncodeType.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\xxh3.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\xxhash.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\ZipUtils.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\crc32.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\deflate.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzguts.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inffast.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inffixed.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inflate.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inftrees.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\trees.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zconf.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zlib.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zutil.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\XPlugin.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\RuntimeApi.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\Common.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\XContext.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\XResult.h" />
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\XService.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\XEncrypt\encrypt\common\Allocator.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\common\Logging.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\common\XAssert.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFDecoder.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFEncoder.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFPlugin.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFRuntimeApi.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\xxhash.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\ZipUtils.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\adler32.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\compress.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\crc32.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\deflate.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzclose.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzlib.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzread.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzwrite.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\infback.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inffast.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inflate.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inftrees.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\trees.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\uncompr.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zutil.c" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\RuntimeApi.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\service\XContext.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\service\XResult.cpp" />
+    <ClCompile Include="..\..\XEncrypt\encrypt\service\XService.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\README.md" />
+    <None Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\README" />
+    <None Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zlib.map" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

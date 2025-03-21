@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "XFileEncoder": {
+      "commandName": "Project",
+      "commandLineArgs": "encrypt -load global-metadata.dat -out global-metadata.xef -encode-type zip",
+      "workingDirectory": "..\\x64",
+      "nativeDebugging": true
+    }
+  }
+}

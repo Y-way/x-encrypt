@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="encrypt">
+      <UniqueIdentifier>{6320e5c7-fc7b-4e4a-be19-9304103ff1f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="encrypt\common">
+      <UniqueIdentifier>{9f79d390-f8b4-41f0-aa51-6b4eac822658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="encrypt\plugin">
+      <UniqueIdentifier>{573a0790-084e-4575-a915-acb5aec66f4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="encrypt\plugin\xef">
+      <UniqueIdentifier>{a253bc7e-76d9-447a-ab0b-42c268b08fdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="encrypt\service">
+      <UniqueIdentifier>{e42ff1fe-d7ae-4270-b399-8bed9ab57845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="encrypt\plugin\xef\zlib">
+      <UniqueIdentifier>{de5bea3a-ee75-4840-bb9a-c70f748f18ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="encrypt\plugin\xef\xxHash">
+      <UniqueIdentifier>{a361ddaf-29b4-43ec-9e01-2cf90dec6017}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\XEncrypt\encrypt\common\Allocator.h">
+      <Filter>encrypt\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\common\Logging.h">
+      <Filter>encrypt\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\common\XAssert.h">
+      <Filter>encrypt\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\Common.h">
+      <Filter>encrypt\service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\XContext.h">
+      <Filter>encrypt\service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\XResult.h">
+      <Filter>encrypt\service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\service\XService.h">
+      <Filter>encrypt\service</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\config.h">
+      <Filter>encrypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\config_api.h">
+      <Filter>encrypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\platforms.h">
+      <Filter>encrypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\RuntimeApi.h">
+      <Filter>encrypt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\Decoder.h">
+      <Filter>encrypt\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\Encoder.h">
+      <Filter>encrypt\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\XPlugin.h">
+      <Filter>encrypt\plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\define.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFDecoder.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFEncoder.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFHeader.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFPlugin.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEFRuntimeApi.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\XEncodeType.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\ZipUtils.h">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\crc32.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\deflate.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzguts.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inffast.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inffixed.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inflate.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inftrees.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\trees.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zconf.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zlib.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zutil.h">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\xxh3.h">
+      <Filter>encrypt\plugin\xef\xxHash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\xxhash.h">
+      <Filter>encrypt\plugin\xef\xxHash</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\XEncrypt\encrypt\common\Allocator.cpp">
+      <Filter>encrypt\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\common\Logging.cpp">
+      <Filter>encrypt\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\common\XAssert.cpp">
+      <Filter>encrypt\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\service\XContext.cpp">
+      <Filter>encrypt\service</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\service\XResult.cpp">
+      <Filter>encrypt\service</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\service\XService.cpp">
+      <Filter>encrypt\service</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\RuntimeApi.cpp">
+      <Filter>encrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFDecoder.cpp">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFEncoder.cpp">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFPlugin.cpp">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\XEFRuntimeApi.cpp">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\ZipUtils.cpp">
+      <Filter>encrypt\plugin\xef</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\adler32.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\compress.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\crc32.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\deflate.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzclose.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzlib.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzread.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\gzwrite.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\infback.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inffast.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inflate.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\inftrees.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\trees.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\uncompr.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zutil.c">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\xxhash.c">
+      <Filter>encrypt\plugin\xef\xxHash</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\README">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </None>
+    <None Include="..\..\XEncrypt\encrypt\plugin\xef\zlib\zlib.map">
+      <Filter>encrypt\plugin\xef\zlib</Filter>
+    </None>
+    <None Include="..\..\XEncrypt\encrypt\plugin\xef\xxHash\README.md">
+      <Filter>encrypt\plugin\xef\xxHash</Filter>
+    </None>
+  </ItemGroup>
+</Project>
