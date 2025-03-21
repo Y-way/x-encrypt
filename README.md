@@ -1,6 +1,17 @@
-# x-Encrypt
-一个简单的自定义加密/解密库.
+# x-encrypt
+简单,高效,跨平台的自定义加密/解密库.<br/>
 支持自定义的加密/解密器
+
+### 支持系统
+|系统|支持||
+|---------------|----------------------|-------|
+|Windows|x86<br/>x86_64<br/>|[✔]<br/>[✔]<br/>|
+|Linux|x86_64<br/>|[✔]<br/>|
+|osx|x86_64<br/>|[✔]<br/>|
+|Android|armeabi-v7a <br/>arm64-v8a<br/>x86<br/>x86_64<br/>|[✔]<br/>[✔]<br/>[✔]<br/>[✔]<br/>|
+|iOS|arm64|[✔]<br/>|
+|tvOS|arm64|[✔]<br/>|
+|UWP|x86<br/>x86_64<br/>arm64<br/>|[✔❗未测试]<br/>[✔❗未测试]<br/>[✔❗未测试]<br/>|
 
 
 ## 使用CMake编译x-Encrypt的测试程序和示例程序
@@ -193,6 +204,9 @@ int main()
     'XEFDecoder'类实现'Decoder'接口类,用于XEF格式数据解密.
     'XEFPlugin'类实现'XPlugin'插件接口类,用于注册到XService.
 
+[XEF加密格式说明](./XEFFormat.md).
+-----
+
 # XFileEncoder
  
  C#导出API使用`x-encrypt`库进行加密/解密
@@ -230,5 +244,6 @@ XFileEncoder command args
 ```
 
 # Unity插件
+基于`x-encrypt`库和C#`XFileEncoder`,实现的Unity插件.
 
-[XEncrypt-Unity](https://github.com/Y-way/XEncrypt-Unity)
+项目地址:[XEncrypt-Unity](https://github.com/Y-way/XEncrypt-Unity)
