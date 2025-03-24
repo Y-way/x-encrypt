@@ -315,23 +315,25 @@ source_group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} XENCRYPT_SOURCES)
 
 # set_target_properties(XEncrypt PROPERTIES SOVERSION 1)
 
-# --- add yasio core lib project
+# --- add lib project
 if (APPLE)
     if (IOS)
         # set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
         add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
     else ()
+        message(STATUS "ARCHS=${ARCHS}")
+        message(STATUS "BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}")
         # set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_64_BIT)")
         if (BUILD_SHARED_LIBS)
-            message(STATUS "ARCHS=${ARCHS}")
             add_library(${xencrypt_target_name} SHARED ${XENCRYPT_SOURCES})
-            set_target_properties(${xencrypt_target_name} PROPERTIES
-                MACOSX_RPATH ON
-                XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
-                XCODE_ATTRIBUTE_ARCHS "${ARCHS}")
         else()
             add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
         endif()
+        
+        set_target_properties(${xencrypt_target_name} PROPERTIES
+            MACOSX_RPATH ON
+            XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
+            XCODE_ATTRIBUTE_ARCHS "${ARCHS}")
     endif ()
 elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Switch")
     add_library(${xencrypt_target_name} STATIC ${XENCRYPT_SOURCES})
@@ -373,7 +375,7 @@ macro(xencrypt_config_lib_depends target_name)
     if(BUILD_SHARED_LIBS AND WIN32)
         add_custom_command(TARGET ${target_name} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${CMAKE_BINARY_DIR}/\$\(Configuration\)/XEncrypt.dll"
+                "${CMAKE_BINARY_DIR}/\$\(Configuration\)/${xencrypt_target_name}.dll"
                 $<TARGET_FILE_DIR:${target_name}>
             )
     endif()
