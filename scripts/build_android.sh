@@ -21,15 +21,19 @@ function build() {
     
     cd ../XEncrypt
     
+    # build static libraries
     cmake -H. -B${BUILD_PATH} -DANDROID_ABI=${ABI} -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake -DANDROID_NATIVE_API_LEVEL=${API} -DANDROID_TOOLCHAIN=clang -DANDROID_TOOLCHAIN_NAME=${TOOLCHAIN_ANME}
     cmake --build ${BUILD_PATH} --config Release
     
+    mkdir -p plugin_android/static/Plugins/Android/${ABI}/
+    cp ${BUILD_PATH}/*.a plugin_android/static/Plugins/Android/${ABI}/
+
+    # build shared libraries
     cmake -H. -B${BUILD_PATH} -DANDROID_ABI=${ABI} -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake -DANDROID_NATIVE_API_LEVEL=${API} -DANDROID_TOOLCHAIN=clang -DANDROID_TOOLCHAIN_NAME=${TOOLCHAIN_ANME}
     cmake --build ${BUILD_PATH} --config Release
 
-    mkdir -p plugin_android/Plugins/Android/libs/${ABI}/
-    cp ${BUILD_PATH}/*.a plugin_android/Plugins/Android/libs/${ABI}/
-    cp ${BUILD_PATH}/*.so plugin_android/Plugins/Android/libs/${ABI}/
+    mkdir -p plugin_android/shared/Plugins/Android/${ABI}/
+    cp ${BUILD_PATH}/*.so plugin_android/shared/Plugins/Android/${ABI}/
 }
 
 build android-16 armeabi-v7a arm-linux-androideabi-4.9
