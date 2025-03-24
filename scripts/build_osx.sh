@@ -10,4 +10,11 @@ mkdir -p plugin_osx/Plugins/
 
 cp build_osx/Release/* plugin_osx/Plugins/
 
+mkdir -p build_osx_a && cd build_osx_a
+cmake -GXcode ../ -DBUILD_SHARED_LIBS=FF -DARCHS="x86_64"
+cd ..
+cmake --build build_osx_a --config Release
+
+cp build_osx_a/Release/* plugin_osx/Plugins/
+
 popd
