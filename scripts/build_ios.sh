@@ -8,7 +8,4 @@ cmake --build build_ios --config Release
 mkdir -p plugin_ios/static/Plugins/iOS/
 cp build_ios/Release/*.a plugin_ios/static/Plugins/iOS/
 
-mkdir -p plugin_ios/shared/Plugins/iOS/
-cp build_ios/Release/*.a plugin_ios/shared/Plugins/iOS/
-
 popd
