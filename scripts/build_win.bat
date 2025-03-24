@@ -10,15 +10,15 @@ set cmake_options=-DBUILD_SHARED_LIBS=ON
 cmake -B build_x64 -A x64 %cmake_options%
 cmake --build build_x64 --config %build_cfg%
 
-md plugin_win\shared\Plugins\Wndows\x86_64
+md plugin_win\shared\Plugins\Windows\x86_64
 
-copy /y build_x64\%build_cfg%\*.dll plugin_win\shared\Plugins\Wndows\x86_64
+copy /y build_x64\%build_cfg%\*.dll plugin_win\shared\Plugins\Windows\x86_64
 
 cmake -B build_x86 -A Win32 %cmake_options%
 cmake --build build_x86 --config %build_cfg%
 
-md plugin_win\shared\Plugins\Wndows\x86
-copy /y build_x86\%build_cfg%\*.dll plugin_win\shared\Plugins\Wndows\x86
+md plugin_win\shared\Plugins\Windows\x86
+copy /y build_x86\%build_cfg%\*.dll plugin_win\shared\Plugins\Windows\x86
 
 
 set cmake_options=-DBUILD_SHARED_LIBS=OFF
